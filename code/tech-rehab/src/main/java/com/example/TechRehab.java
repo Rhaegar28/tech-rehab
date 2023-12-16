@@ -1,8 +1,12 @@
 package com.example;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.*;
+
+import java.util.Scanner;
 
 public class TechRehab {
     private static TechRehab techRehab;
@@ -10,6 +14,7 @@ public class TechRehab {
     private Map<String, Ricambio> ricambi;
     private Map<String, Dispositivo> dispositivi;
     private Dispositivo dispositivoSelezionato;
+    private Dispositivo dispositivoCorrente; 
 
     private TechRehab() {
         this.riparazioni = new HashMap<>();
@@ -58,5 +63,59 @@ public class TechRehab {
         riparazioni.put(r.getCodice(),r);
         dispositivoSelezionato=null;
     }
+
+    public List<Riparazione> ottieniRiparazioni(){
+
+        return riparazioni.values().stream()
+                                .filter(r->r.getStato().equals("In lavorazione") 
+                                    || r.getStato().equals("In carico"))
+                                .collect(Collectors.toList());
+    }
+
+    public Riparazione selezionaRiparazione(Integer codiceRiparazione) {
+        Riparazione r = riparazioni.get(codiceRiparazione);
+        r.setStato("In lavorazione");
+        return r;
+    }
+
+    public void terminaRiparazione(Integer codiceRiparazione) {
+        Riparazione r = riparazioni.get(codiceRiparazione);
+        r.setStato("Completato");
+    }
+
+    public Dispositivo inserisciDispositivo(String marca, String modello, String seriale, Date fineGaranzia){
+        dispositivoCorrente =  new Dispositivo(modello, marca, seriale, fineGaranzia);
+        return dispositivoCorrente;
+    }
+
+    public void confermaInserimentoDispositivo(){
+        dispositivi.put(dispositivoCorrente.getSeriale(), dispositivoCorrente);
+        dispositivoCorrente =  null;
+    }
+
+    public void modificaDispositivo(String seriale, String marca, String modello, Date fineGaranzia){
+        dispositivoCorrente = dispositivi.get(seriale);
+        dispositivoCorrente.updateDispositivo(marca, modello, fineGaranzia);
+        dispositivoCorrente = null;
+    }
+
+    public void rimuoviDispositivo(String seriale){
+        dispositivoCorrente =  dispositivi.get(seriale);
+
+        System.out.println("Sei sicuro di voler rimuovere il dispositivo " + dispositivoCorrente.getMarca() + " " + dispositivoCorrente.getModello() + "?[Y,N]");
+
+        Scanner scanner = new Scanner(System.in);
+        String response = scanner.nextLine();
+        scanner.close();
+     
+        if(response == "Y"){
+            dispositivi.remove(seriale);
+        } 
+    }
+
+    public Dispositivo ricercaDispositivo(String seriale){
+        return dispositivi.get(seriale);
+    }
+    
 
 }

@@ -67,5 +67,12 @@ public class Dispositivo {
         return preventivi.get(codicePreventivo).nuovaRiparazione(descrizioneRiparazione);
     }
 
+    public void updateDispositivo(String marca, String modello, Date fineGaranzia){
+        setMarca(marca);
+        setModello(modello);
+        setFinegaranzia(fineGaranzia);
+    }
+
+
     
 }
