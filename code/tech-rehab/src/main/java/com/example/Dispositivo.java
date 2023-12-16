@@ -9,7 +9,7 @@ public class Dispositivo {
     private String marca;
     private String seriale;
     private Date fineGaranzia;
-    private Map<String,Preventivo> preventivi;
+    private Map<Integer,Preventivo> preventivi;
     private Preventivo preventivoCorrente;
     
     public String getModello() {
@@ -44,5 +44,28 @@ public class Dispositivo {
         this.fineGaranzia = fineGaranzia;
         this.preventivi=new HashMap<>();
     }
+    
+    public void nuovoPreventivo(){
+        preventivoCorrente=new Preventivo();
+    }
+
+    public void aggiungiGuasto(Ricambio ricambio){
+        preventivoCorrente.aggiungiGuasto(ricambio);
+        
+    }
+    public void definisciPriorita(boolean priorita){
+        preventivoCorrente.setPriorita(priorita);
+
+    }
+    public Preventivo confermaPreventivo(){
+        int codicePreventivo=preventivoCorrente.getCodice();
+        preventivi.put(codicePreventivo,preventivoCorrente);
+        preventivoCorrente=null;
+        return preventivi.get(codicePreventivo);
+    }
+    public Riparazione nuovaRiparazione(String descrizioneRiparazione, int codicePreventivo){
+        return preventivi.get(codicePreventivo).nuovaRiparazione(descrizioneRiparazione);
+    }
+
     
 }

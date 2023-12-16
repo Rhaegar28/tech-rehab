@@ -6,6 +6,7 @@ import java.util.List;
 
 
 public class Preventivo {
+    private static int count=0;
     private int codice;
     private String descrizione;
     private Date dataEmissione;
@@ -58,7 +59,7 @@ public class Preventivo {
     public void setCostoPrevisto(float costoPrevisto) {
         this.costoPrevisto = costoPrevisto;
     }
-    public Preventivo(int codice, String descrizione, Date dataEmissione, Date dataPrevistaConsegna, float oreLavoroPreviste, boolean priorita) {
+  /*   public Preventivo(int codice, String descrizione, Date dataEmissione, Date dataPrevistaConsegna, float oreLavoroPreviste, boolean priorita) {
         this.codice = codice;
         this.descrizione = descrizione;
         this.dataEmissione = dataEmissione;
@@ -66,8 +67,22 @@ public class Preventivo {
         this.oreLavoroPreviste = oreLavoroPreviste;
         this.priorita = priorita;
         this.listaRicambi=  new ArrayList<>();
+    }*/
+
+
+    public Preventivo() {
+        this.codice=++count;
+        this.listaRicambi=  new ArrayList<>();
+    }
+    public void aggiungiGuasto(Ricambio ricambio){
+        this.listaRicambi.add(ricambio);
     }
 
+    public Riparazione nuovaRiparazione(String descrizioneRiparazione){
+        Riparazione r=new Riparazione(descrizioneRiparazione);
+        this.riparazione=r;
+        return r;
+    }
 
 
 

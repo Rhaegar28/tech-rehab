@@ -1,8 +1,7 @@
 package com.example;
 
-
-
 public class Riparazione {
+    private static int count=0;
     private int codice;
     private String descrizione;
     private String stato;
@@ -32,11 +31,10 @@ public class Riparazione {
     public void setOreManodopera(float oreManodopera) {
         this.oreManodopera = oreManodopera;
     }
-    public Riparazione(int codice, String descrizione, String stato, float oreManodopera) {
-        this.codice = codice;
-        this.descrizione = descrizione;
-        this.stato = stato;
-        this.oreManodopera = oreManodopera;
+
+    public Riparazione(String descrizioneRiparazione) {
+        this.descrizione=descrizioneRiparazione;
+        this.codice=++count;
     }
     
 
