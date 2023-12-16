@@ -80,13 +80,7 @@ public class Preventivo {
     }
 
     public Riparazione nuovaRiparazione(String descrizioneRiparazione){
-        Riparazione r=new Riparazione(descrizioneRiparazione);
-        this.riparazione=r;
-        return r;
+        this.riparazione = new Riparazione(descrizioneRiparazione);
+        return riparazione;
     }
-
-
-
-
-    
 }
