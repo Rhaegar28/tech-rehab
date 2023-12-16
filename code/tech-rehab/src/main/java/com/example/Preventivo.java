@@ -1,0 +1,76 @@
+package com.example;
+
+import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
+
+
+public class Preventivo {
+    private int codice;
+    private String descrizione;
+    private Date dataEmissione;
+    private Date dataPrevistaConsegna;
+    private float oreLavoroPreviste;
+    private boolean priorita;
+    private float costoPrevisto;
+    private List <Ricambio> listaRicambi;
+    private Riparazione riparazione;
+
+    public int getCodice() {
+        return codice;
+    }
+    public void setCodice(int codice) {
+        this.codice = codice;
+    }
+    public String getDescrizione() {
+        return descrizione;
+    }
+    public void setDescrizione(String descrizione) {
+        this.descrizione = descrizione;
+    }
+    public Date getDataEmissione() {
+        return dataEmissione;
+    }
+    public void setDataEmissione(Date dataEmissione) {
+        this.dataEmissione = dataEmissione;
+    }
+    public Date getDataPrecistaConsegna() {
+        return dataPrevistaConsegna;
+    }
+    public void setDataPrecistaConsegna(Date dataPrevistaConsegna) {
+        this.dataPrevistaConsegna = dataPrevistaConsegna;
+    }
+    public float getOreLavoroPreviste() {
+        return oreLavoroPreviste;
+    }
+    public void setOreLavoroPreviste(float oreLavoroPreviste) {
+        this.oreLavoroPreviste = oreLavoroPreviste;
+    }
+    public boolean getPriorita() {
+        return priorita;
+    }
+    public void setPriorita(boolean priorita) {
+        this.priorita = priorita;
+    }
+    public float getCostoPrevisto() {
+        return costoPrevisto;
+    }
+    public void setCostoPrevisto(float costoPrevisto) {
+        this.costoPrevisto = costoPrevisto;
+    }
+    public Preventivo(int codice, String descrizione, Date dataEmissione, Date dataPrevistaConsegna, float oreLavoroPreviste, boolean priorita) {
+        this.codice = codice;
+        this.descrizione = descrizione;
+        this.dataEmissione = dataEmissione;
+        this.dataPrevistaConsegna = dataPrevistaConsegna;
+        this.oreLavoroPreviste = oreLavoroPreviste;
+        this.priorita = priorita;
+        this.listaRicambi=  new ArrayList<>();
+    }
+
+
+
+
+
+    
+}
