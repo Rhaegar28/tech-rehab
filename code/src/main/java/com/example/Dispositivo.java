@@ -1,6 +1,5 @@
 package com.example;
-
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,7 +7,7 @@ public class Dispositivo {
     private String modello;
     private String marca;
     private String seriale;
-    private Date fineGaranzia;
+    private LocalDate fineGaranzia;
     private Map<Integer,Preventivo> preventivi;
     private Preventivo preventivoCorrente;
     
@@ -30,14 +29,14 @@ public class Dispositivo {
     public void setSeriale(String seriale) {
         this.seriale = seriale;
     }
-    public Date getFinegaranzia() {
+    public LocalDate getFinegaranzia() {
         return fineGaranzia;
     }
-    public void setFinegaranzia(Date fineGaranzia) {
+    public void setFinegaranzia(LocalDate fineGaranzia) {
         this.fineGaranzia = fineGaranzia;
     }
 
-    public Dispositivo(String modello, String marca, String seriale, Date fineGaranzia) {
+    public Dispositivo(String modello, String marca, String seriale, LocalDate fineGaranzia) {
         this.modello = modello;
         this.marca = marca;
         this.seriale = seriale;
@@ -67,7 +66,7 @@ public class Dispositivo {
         return preventivi.get(codicePreventivo).nuovaRiparazione(descrizioneRiparazione);
     }
 
-    public void updateDispositivo(String marca, String modello, Date fineGaranzia){
+    public void updateDispositivo(String marca, String modello, LocalDate fineGaranzia){
         setMarca(marca);
         setModello(modello);
         setFinegaranzia(fineGaranzia);

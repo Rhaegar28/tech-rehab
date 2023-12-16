@@ -1,6 +1,6 @@
 package com.example;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,9 +38,9 @@ public class TechRehab {
     }
 
     public void loadDispositivi() {
-        dispositivi.put("SM-G930", new Dispositivo("S7", "Samsung", "SM-G930", Date.valueOf("2018-12-31")));
-        dispositivi.put("SM-S918B", new Dispositivo("S23 ultra", "Samsung", "SM-S918B", Date.valueOf("2025-12-31")));
-        dispositivi.put("23116PN5BC", new Dispositivo("14 ultra", "Xiaomi", "23116PN5BC", Date.valueOf("2023-12-14")));
+        dispositivi.put("SM-G930", new Dispositivo("S7", "Samsung", "SM-G930", LocalDate.parse("2018-12-31")));
+        dispositivi.put("SM-S918B", new Dispositivo("S23 ultra", "Samsung", "SM-S918B", LocalDate.parse("2026-12-31")));
+        dispositivi.put("23116PN5BC", new Dispositivo("14 ultra", "Xiaomi", "23116PN5BC", LocalDate.parse("2023-12-31")));
     }
 
     public void nuovoPreventivo(String serialeDispositivo){
@@ -83,7 +83,7 @@ public class TechRehab {
         r.setStato("Completato");
     }
 
-    public Dispositivo inserisciDispositivo(String marca, String modello, String seriale, Date fineGaranzia){
+    public Dispositivo inserisciDispositivo(String marca, String modello, String seriale, LocalDate fineGaranzia){
         dispositivoCorrente =  new Dispositivo(modello, marca, seriale, fineGaranzia);
         return dispositivoCorrente;
     }
@@ -93,7 +93,7 @@ public class TechRehab {
         dispositivoCorrente =  null;
     }
 
-    public void modificaDispositivo(String seriale, String marca, String modello, Date fineGaranzia){
+    public void modificaDispositivo(String seriale, String marca, String modello, LocalDate fineGaranzia){
         dispositivoCorrente = dispositivi.get(seriale);
         dispositivoCorrente.updateDispositivo(marca, modello, fineGaranzia);
         dispositivoCorrente = null;

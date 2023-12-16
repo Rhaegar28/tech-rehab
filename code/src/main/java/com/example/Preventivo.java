@@ -1,6 +1,7 @@
 package com.example;
 
-import java.util.Date;
+
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,8 +10,8 @@ public class Preventivo {
     private static int count=0;
     private int codice;
     private String descrizione;
-    private Date dataEmissione;
-    private Date dataPrevistaConsegna;
+    private LocalDate dataEmissione;
+    private LocalDate dataPrevistaConsegna;
     private float oreLavoroPreviste;
     private boolean priorita;
     private float costoPrevisto;
@@ -29,16 +30,16 @@ public class Preventivo {
     public void setDescrizione(String descrizione) {
         this.descrizione = descrizione;
     }
-    public Date getDataEmissione() {
+    public LocalDate getDataEmissione() {
         return dataEmissione;
     }
-    public void setDataEmissione(Date dataEmissione) {
+    public void setDataEmissione(LocalDate dataEmissione) {
         this.dataEmissione = dataEmissione;
     }
-    public Date getDataPrecistaConsegna() {
+    public  LocalDate getDataPrecistaConsegna() {
         return dataPrevistaConsegna;
     }
-    public void setDataPrecistaConsegna(Date dataPrevistaConsegna) {
+    public void setDataPrecistaConsegna(LocalDate dataPrevistaConsegna) {
         this.dataPrevistaConsegna = dataPrevistaConsegna;
     }
     public float getOreLavoroPreviste() {
