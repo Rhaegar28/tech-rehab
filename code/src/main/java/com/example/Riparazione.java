@@ -37,5 +37,10 @@ public class Riparazione {
         this.codice=++count;
     }
     
-
+    public void stampaRiparazione() {
+        System.out.println("Codice: " + codice);
+        System.out.println("Descrizione: " + descrizione);
+        System.out.println("Stato: " + stato);
+        System.out.println("Ore manodopera: " + oreManodopera);
+    }
 }

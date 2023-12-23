@@ -45,31 +45,44 @@ public class Dispositivo {
     }
     
     public void nuovoPreventivo(){
-        preventivoCorrente=new Preventivo();
+        preventivoCorrente = new Preventivo();
     }
 
     public void aggiungiGuasto(Ricambio ricambio){
         preventivoCorrente.aggiungiGuasto(ricambio);
-        
     }
+
     public void definisciPriorita(boolean priorita){
         preventivoCorrente.setPriorita(priorita);
-
     }
+
+    public void definisciOreLavoroPreviste(float orePreviste){
+        preventivoCorrente.setOreLavoroPreviste(orePreviste);
+    }
+
+    public void definisciDataPrevistaConsegna(LocalDate dataPrevistaConsegna){
+        preventivoCorrente.setDataPrevistaConsegna(dataPrevistaConsegna);
+    }
+
     public Preventivo confermaPreventivo(){
         int codicePreventivo=preventivoCorrente.getCodice();
+        preventivoCorrente.setCostoPrevisto();
         preventivi.put(codicePreventivo,preventivoCorrente);
         preventivoCorrente=null;
         return preventivi.get(codicePreventivo);
     }
+
     public Riparazione nuovaRiparazione(String descrizioneRiparazione, int codicePreventivo){
         return preventivi.get(codicePreventivo).nuovaRiparazione(descrizioneRiparazione);
     }
 
     public void updateDispositivo(String marca, String modello, LocalDate fineGaranzia){
-        setMarca(marca);
-        setModello(modello);
-        setFinegaranzia(fineGaranzia);
+        if (marca != null)
+            setMarca(marca);
+        if (modello != null)
+            setModello(modello);
+        if (fineGaranzia != null)
+            setFinegaranzia(fineGaranzia);
     }
 
 

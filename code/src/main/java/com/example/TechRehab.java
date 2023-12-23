@@ -55,6 +55,12 @@ public class TechRehab {
     public void definisciPriorita(boolean priorita){
         dispositivoSelezionato.definisciPriorita(priorita);
     }
+    public void definisciOreLavoroPreviste(float orePreviste){
+        dispositivoSelezionato.definisciOreLavoroPreviste(orePreviste);
+    }
+    public void definisciDataPrevistaConsegna(LocalDate dataPrevistaConsegna){
+        dispositivoSelezionato.definisciDataPrevistaConsegna(dataPrevistaConsegna);
+    }
     public Preventivo confermaPreventivo(){
         return dispositivoSelezionato.confermaPreventivo();
     }
@@ -65,22 +71,27 @@ public class TechRehab {
     }
 
     public List<Riparazione> ottieniRiparazioni(){
-
         return riparazioni.values().stream()
                                 .filter(r->r.getStato().equals("In lavorazione") 
                                     || r.getStato().equals("In carico"))
                                 .collect(Collectors.toList());
     }
 
-    public Riparazione selezionaRiparazione(Integer codiceRiparazione) {
+    public Riparazione selezionaRiparazione(int codiceRiparazione) {
         Riparazione r = riparazioni.get(codiceRiparazione);
         r.setStato("In lavorazione");
         return r;
     }
 
-    public void terminaRiparazione(Integer codiceRiparazione) {
+    public void definisciOreManodopera(int codiceRiparazione, float oreManodopera) {
+        Riparazione r = riparazioni.get(codiceRiparazione);
+        r.setOreManodopera(oreManodopera);
+    }
+
+    public Riparazione terminaRiparazione(int codiceRiparazione) {
         Riparazione r = riparazioni.get(codiceRiparazione);
         r.setStato("Completato");
+        return r;
     }
 
     public Dispositivo inserisciDispositivo(String marca, String modello, String seriale, LocalDate fineGaranzia){
