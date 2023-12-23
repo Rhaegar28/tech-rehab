@@ -37,5 +37,4 @@ public class Riparazione {
         this.codice=++count;
     }
     
-
 }

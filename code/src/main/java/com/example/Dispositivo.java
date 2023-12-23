@@ -71,7 +71,4 @@ public class Dispositivo {
         setModello(modello);
         setFinegaranzia(fineGaranzia);
     }
-
-
-    
 }
