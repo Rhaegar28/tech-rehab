@@ -1,5 +1,6 @@
 package com.example;
 
+
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
@@ -43,9 +44,21 @@ public class TechRehab {
         dispositivi.put("23116PN5BC", new Dispositivo("14 ultra", "Xiaomi", "23116PN5BC", LocalDate.parse("2023-12-31")));
     }
 
-    public void nuovoPreventivo(String serialeDispositivo){
-        Dispositivo dispositivoSelezionato=dispositivi.get(serialeDispositivo);
-        dispositivoSelezionato.nuovoPreventivo();
+    public void nuovoPreventivo(String serialeDispositivo) {
+        try {
+            if (dispositivoSelezionato == null) {
+                dispositivoSelezionato=dispositivi.get(serialeDispositivo);
+
+                if (dispositivoSelezionato == null) {
+                    throw new Exception("Errore TechRehab: Dispositivo non trovato.");
+                }
+            }
+
+            dispositivoSelezionato.nuovoPreventivo();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Errore TechRehab: Si è verificato un errore imprevisto.");
+        }
     }
 
     public void aggiungiGuasto(String serialeRicambio){
@@ -55,8 +68,17 @@ public class TechRehab {
     public void definisciPriorita(boolean priorita){
         dispositivoSelezionato.definisciPriorita(priorita);
     }
+    public void definisciOreLavoroPreviste(float orePreviste){
+        dispositivoSelezionato.definisciOreLavoroPreviste(orePreviste);
+    }
+    public void definisciDataPrevistaConsegna(LocalDate dataPrevistaConsegna){
+        dispositivoSelezionato.definisciDataPrevistaConsegna(dataPrevistaConsegna);
+    }
     public Preventivo confermaPreventivo(){
         return dispositivoSelezionato.confermaPreventivo();
+    }
+    public void definisciDescrizione(String descrizione){
+        dispositivoSelezionato.definisciDescrizione(descrizione);
     }
     public void accettaPreventivo(String descrizioneRiparazione, int codicePreventivo){
         Riparazione r=dispositivoSelezionato.nuovaRiparazione(descrizioneRiparazione,codicePreventivo);
@@ -65,22 +87,27 @@ public class TechRehab {
     }
 
     public List<Riparazione> ottieniRiparazioni(){
-
         return riparazioni.values().stream()
                                 .filter(r->r.getStato().equals("In lavorazione") 
                                     || r.getStato().equals("In carico"))
                                 .collect(Collectors.toList());
     }
 
-    public Riparazione selezionaRiparazione(Integer codiceRiparazione) {
+    public Riparazione selezionaRiparazione(int codiceRiparazione) {
         Riparazione r = riparazioni.get(codiceRiparazione);
         r.setStato("In lavorazione");
         return r;
     }
 
-    public void terminaRiparazione(Integer codiceRiparazione) {
+    public void definisciOreManodopera(int codiceRiparazione, float oreManodopera) {
+        Riparazione r = riparazioni.get(codiceRiparazione);
+        r.setOreManodopera(oreManodopera);
+    }
+
+    public Riparazione terminaRiparazione(int codiceRiparazione) {
         Riparazione r = riparazioni.get(codiceRiparazione);
         r.setStato("Completato");
+        return r;
     }
 
     public Dispositivo inserisciDispositivo(String marca, String modello, String seriale, LocalDate fineGaranzia){
@@ -99,18 +126,36 @@ public class TechRehab {
         dispositivoCorrente = null;
     }
 
-    public void rimuoviDispositivo(String seriale){
-        dispositivoCorrente =  dispositivi.get(seriale);
-
-        System.out.println("Sei sicuro di voler rimuovere il dispositivo " + dispositivoCorrente.getMarca() + " " + dispositivoCorrente.getModello() + "?[Y,N]");
-
+    public void rimuoviDispositivo() throws Exception {
+        if (dispositivi.isEmpty()) {
+            System.out.println("Nessun dispositivo registrato.");
+            return;
+        }
+    
+        System.out.println("Lista dei dispositivi registrati:");
+        for (Dispositivo dispositivo : dispositivi.values()) {
+            System.out.println(dispositivo.getSeriale() + ": " + dispositivo.getMarca() + " " + dispositivo.getModello());
+        }
+    
+        System.out.print("Inserisci il seriale del dispositivo da rimuovere: ");
         Scanner scanner = new Scanner(System.in);
-        String response = scanner.nextLine();
-        scanner.close();
-     
-        if(response == "Y"){
-            dispositivi.remove(seriale);
-        } 
+        String serialeDaRimuovere = scanner.next();
+    
+        if (!dispositivi.containsKey(serialeDaRimuovere)) {
+            throw new Exception("Dispositivo non trovato con il seriale: " + serialeDaRimuovere);
+        }
+    
+        Dispositivo dispositivoRimosso = dispositivi.get(serialeDaRimuovere);
+    
+        System.out.println("Sei sicuro di voler rimuovere il dispositivo " + dispositivoRimosso.getMarca() + " " + dispositivoRimosso.getModello() + "? [Y/N]");
+    
+        String response = scanner.next();
+        if ("Y".equalsIgnoreCase(response)) {
+            dispositivi.remove(serialeDaRimuovere);
+            System.out.println("Dispositivo rimosso con successo.");
+        } else {
+            System.out.println("Rimozione annullata.");
+        }
     }
 
     public Dispositivo ricercaDispositivo(String seriale){
