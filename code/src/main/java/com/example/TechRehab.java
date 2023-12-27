@@ -2,6 +2,7 @@ package com.example;
 
 
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -77,9 +78,6 @@ public class TechRehab {
     public Preventivo confermaPreventivo(){
         return dispositivoSelezionato.confermaPreventivo();
     }
-    public void definisciDescrizione(String descrizione){
-        dispositivoSelezionato.definisciDescrizione(descrizione);
-    }
     public void accettaPreventivo(String descrizioneRiparazione, int codicePreventivo){
         Riparazione r=dispositivoSelezionato.nuovaRiparazione(descrizioneRiparazione,codicePreventivo);
         riparazioni.put(r.getCodice(),r);
@@ -87,10 +85,11 @@ public class TechRehab {
     }
 
     public List<Riparazione> ottieniRiparazioni(){
-        return riparazioni.values().stream()
-                                .filter(r->r.getStato().equals("In lavorazione") 
-                                    || r.getStato().equals("In carico"))
-                                .collect(Collectors.toList());
+        return riparazioni.values()
+                .stream()
+                .filter(r->r.getStato().equals("In lavorazione") || r.getStato().equals("In carico"))
+                .sorted(Comparator.comparingInt(r -> r.getPreventivo().getPriorita() ? 0 : 1))
+                .collect(Collectors.toList());
     }
 
     public Riparazione selezionaRiparazione(int codiceRiparazione) {

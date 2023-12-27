@@ -157,6 +157,7 @@ public class App {
                     scanner.next();
                 }
             } else if (risposta.equals("N")) {
+                scanner.nextLine(); // Pulisce il buffer di input
                 break;
             } else {
                 System.out.println("Scelta non valida. Riprova.");
@@ -165,7 +166,6 @@ public class App {
         definisciPriorita(techRehab, scanner);
         definisciOreLavoroPreviste(techRehab, scanner);
         definisciDataPrevistaConsegna(techRehab, scanner);
-        definisciDescrizione(techRehab, scanner);
         codicePreventivo = confermaPreventivo(techRehab, scanner);
         accettaPreventivo(techRehab, codicePreventivo, scanner);
     }
@@ -195,26 +195,10 @@ public class App {
             System.out.println("Input non valido. Inserisci un valore corretto per la priorita.");
         }
     }
-    private static void definisciDescrizione(TechRehab techRehab, Scanner scanner) {
-        System.out.print("Scrivi la descrizione con i guasti precedentemente aggiunti al dispositivo da riparare: ");
-        String descrizione = scanner.nextLine();
-        techRehab.definisciDescrizione(descrizione);
-        System.out.println("Descrizione preventivo inserita con successo.");
-    }
 
-   /*  private static void definisciOreLavoroPreviste(TechRehab techRehab, Scanner scanner) {
-        System.out.print("Definisci le ore di lavoro previste per il preventivo: ");
-        float oreLavoroPreviste = scanner.nextFloat();
-        techRehab.definisciOreLavoroPreviste(oreLavoroPreviste);
-        System.out.println("Ore di lavoro previste per il preventivo definite con successo.");
-    }*/
     private static void definisciOreLavoroPreviste(TechRehab techRehab, Scanner scanner) {
         System.out.print("Definisci le ore di lavoro previste per il preventivo: ");
-        
-        // Utilizza nextLine() per leggere l'intera linea
         String inputOreLavoroPreviste = scanner.nextLine();
-    
-        // Converte la stringa in un valore float
         try {
             float oreLavoroPreviste = Float.parseFloat(inputOreLavoroPreviste);
             techRehab.definisciOreLavoroPreviste(oreLavoroPreviste);
@@ -227,9 +211,14 @@ public class App {
 
     private static void definisciDataPrevistaConsegna(TechRehab techRehab, Scanner scanner) {
         System.out.print("Definisci la data prevista di consegna del preventivo (YYYY-MM-DD): ");
-        LocalDate dataPrevistaConsegna = LocalDate.parse(scanner.next());
-        techRehab.definisciDataPrevistaConsegna(dataPrevistaConsegna);
-        System.out.println("Data prevista di consegna del preventivo definita con successo.");
+        String inputDataPrevistaConsegna = scanner.nextLine();
+        try {
+            LocalDate dataPrevistaConsegna = LocalDate.parse(inputDataPrevistaConsegna);
+            techRehab.definisciDataPrevistaConsegna(dataPrevistaConsegna);
+            System.out.println("Data prevista di consegna del preventivo definita con successo.");
+        } catch (InputMismatchException e) {
+            System.out.println("Input non valido. Inserisci un valore corretto per la data.");
+        }
     }
 
     private static int confermaPreventivo(TechRehab techRehab, Scanner scanner) {
@@ -241,7 +230,7 @@ public class App {
 
     private static void accettaPreventivo(TechRehab techRehab, int codicePreventivo, Scanner scanner) {
         System.out.print("Inserisci la descrizione della riparazione: ");
-        String descrizioneRiparazione = scanner.next();
+        String descrizioneRiparazione = scanner.nextLine();
         techRehab.accettaPreventivo(descrizioneRiparazione, codicePreventivo);
         System.out.println("Preventivo accettato e riparazione creata con successo.");
     }

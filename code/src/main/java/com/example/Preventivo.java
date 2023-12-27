@@ -10,7 +10,6 @@ public class Preventivo {
 
     private static int count=0;
     private int codice;
-    private String descrizione;
     private LocalDate dataEmissione;
     private LocalDate dataPrevistaConsegna;
     private float oreLavoroPreviste;
@@ -24,12 +23,6 @@ public class Preventivo {
     }
     public void setCodice(int codice) {
         this.codice = codice;
-    }
-    public String getDescrizione() {
-        return descrizione;
-    }
-    public void setDescrizione(String descrizione) {
-        this.descrizione = descrizione;
     }
     public LocalDate getDataEmissione() {
         return dataEmissione;
@@ -74,17 +67,6 @@ public class Preventivo {
         this.riparazione = riparazione;
     }
 
-  /*   public Preventivo(int codice, String descrizione, Date dataEmissione, Date dataPrevistaConsegna, float oreLavoroPreviste, boolean priorita) {
-        this.codice = codice;
-        this.descrizione = descrizione;
-        this.dataEmissione = dataEmissione;
-        this.dataPrevistaConsegna = dataPrevistaConsegna;
-        this.oreLavoroPreviste = oreLavoroPreviste;
-        this.priorita = priorita;
-        this.listaRicambi=  new ArrayList<>();
-    }*/
-
-
     public Preventivo() {
         this.codice=++count;
         this.dataEmissione=LocalDate.now();
@@ -93,18 +75,14 @@ public class Preventivo {
     public void aggiungiGuasto(Ricambio ricambio){
         this.listaRicambi.add(ricambio);
     }
-    public void aggiungiDescrizione(String descrizione){
-        this.descrizione=descrizione;
-    }
 
     public Riparazione nuovaRiparazione(String descrizioneRiparazione){
-        this.riparazione = new Riparazione(descrizioneRiparazione);
+        this.riparazione = new Riparazione(descrizioneRiparazione, this);
         return riparazione;
     }
 
     public void stampaPreventivo() {
         System.out.println("Preventivo: " + this.codice);
-        System.out.println("Descrizione: " + this.descrizione);
         System.out.println("Data emissione: " + this.dataEmissione);
         System.out.println("Data prevista consegna: " + this.dataPrevistaConsegna);
         System.out.println("Ore lavoro previste: " + this.oreLavoroPreviste);

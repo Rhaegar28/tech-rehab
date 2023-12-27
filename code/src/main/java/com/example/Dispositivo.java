@@ -73,9 +73,6 @@ public void aggiungiGuasto(Ricambio ricambio) {
     public void definisciPriorita(boolean priorita){
         preventivoCorrente.setPriorita(priorita);
     }
-    public void definisciDescrizione(String descrizione){
-        preventivoCorrente.aggiungiDescrizione(descrizione);
-    }
 
     public void definisciOreLavoroPreviste(float orePreviste){
         preventivoCorrente.setOreLavoroPreviste(orePreviste);

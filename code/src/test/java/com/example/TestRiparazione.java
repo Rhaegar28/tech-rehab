@@ -11,7 +11,7 @@ public class TestRiparazione {
 
     @Before
     public void setUp() {
-        riparazione = new Riparazione("Display rotto, sostituire il display");
+        riparazione = new Riparazione("Display rotto, sostituire il display", new Preventivo());
     }
     @Test
     public void testGetSetDescrizione() {

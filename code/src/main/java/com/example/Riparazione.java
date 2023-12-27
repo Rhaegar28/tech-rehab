@@ -6,6 +6,7 @@ public class Riparazione {
     private String descrizione;
     private String stato;
     private float oreManodopera;
+    private Preventivo preventivo;
 
     public int getCodice() {
         return codice;
@@ -31,9 +32,17 @@ public class Riparazione {
     public void setOreManodopera(float oreManodopera) {
         this.oreManodopera = oreManodopera;
     }
+    public Preventivo getPreventivo() {
+        return preventivo;
+    }
+    public void setPreventivo(Preventivo preventivo) {
+        this.preventivo = preventivo;
+    }
 
-    public Riparazione(String descrizioneRiparazione) {
+    public Riparazione(String descrizioneRiparazione, Preventivo preventivo) {
+        this.preventivo=preventivo;
         this.descrizione=descrizioneRiparazione;
+        this.stato="In carico";
         this.codice=++count;
     }
     
