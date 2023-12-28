@@ -35,6 +35,12 @@ public class Dispositivo {
     public void setFinegaranzia(LocalDate fineGaranzia) {
         this.fineGaranzia = fineGaranzia;
     }
+        public Preventivo getPreventivoCorrente() {
+        return preventivoCorrente;
+    }
+    public Map<Integer, Preventivo> getPreventivi() {
+        return preventivi;
+    }
 
     public Dispositivo(String modello, String marca, String seriale, LocalDate fineGaranzia) {
         this.modello = modello;
@@ -46,10 +52,6 @@ public class Dispositivo {
     
     public void nuovoPreventivo() {
         try {
-            if (preventivoCorrente != null) {
-                throw new Exception("Errore Dispositivo: Preventivo già inizializzato.");
-            }
-
             preventivoCorrente = new Preventivo();
         } catch (Exception e) {
             e.printStackTrace();

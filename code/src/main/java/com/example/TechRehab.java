@@ -33,6 +33,16 @@ public class TechRehab {
         return techRehab;
     }
 
+    public Dispositivo getDispositivoSelezionato() {
+        return dispositivoSelezionato;
+    }
+    public Map<Integer, Riparazione> getRiparazioni() {
+        return riparazioni;
+    }
+    public Map<String, Dispositivo> getDispositivi() {
+        return dispositivi;
+    }
+
     public void loadRicambi() {
         ricambi.put("DP124353dd", new Ricambio("DP124353dd", "Display", 300.0f));
         ricambi.put("B2353", new Ricambio("B2353", "Batteria", 80.0f));
@@ -47,14 +57,10 @@ public class TechRehab {
 
     public void nuovoPreventivo(String serialeDispositivo) {
         try {
+            dispositivoSelezionato=dispositivi.get(serialeDispositivo);
             if (dispositivoSelezionato == null) {
-                dispositivoSelezionato=dispositivi.get(serialeDispositivo);
-
-                if (dispositivoSelezionato == null) {
-                    throw new Exception("Errore TechRehab: Dispositivo non trovato.");
-                }
+                throw new Exception("Errore TechRehab: Dispositivo non trovato.");
             }
-
             dispositivoSelezionato.nuovoPreventivo();
         } catch (Exception e) {
             e.printStackTrace();
@@ -64,19 +70,51 @@ public class TechRehab {
 
     public void aggiungiGuasto(String serialeRicambio){
         Ricambio ricambioSelezionato=ricambi.get(serialeRicambio);
-        dispositivoSelezionato.aggiungiGuasto(ricambioSelezionato);
+        try {
+            if (dispositivoSelezionato == null) {
+                throw new Exception("Errore TechRehab: Dispositivo non trovato.");
+            }
+            dispositivoSelezionato.aggiungiGuasto(ricambioSelezionato);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Errore TechRehab: Si è verificato un errore imprevisto.");
+        }
     }
     public void definisciPriorita(boolean priorita){
-        dispositivoSelezionato.definisciPriorita(priorita);
+        try {
+            if (dispositivoSelezionato == null) {
+                throw new Exception("Errore TechRehab: Dispositivo non trovato.");
+            }
+            dispositivoSelezionato.definisciPriorita(priorita);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Errore TechRehab: Si è verificato un errore imprevisto.");
+        }
     }
     public void definisciOreLavoroPreviste(float orePreviste){
-        dispositivoSelezionato.definisciOreLavoroPreviste(orePreviste);
+        try {
+            if (dispositivoSelezionato == null) {
+                throw new Exception("Errore TechRehab: Dispositivo non trovato.");
+            }
+            dispositivoSelezionato.definisciOreLavoroPreviste(orePreviste);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Errore TechRehab: Si è verificato un errore imprevisto.");
+        }
     }
     public void definisciDataPrevistaConsegna(LocalDate dataPrevistaConsegna){
-        dispositivoSelezionato.definisciDataPrevistaConsegna(dataPrevistaConsegna);
+        try {
+            if (dispositivoSelezionato == null) {
+                throw new Exception("Errore TechRehab: Dispositivo non trovato.");
+            }
+            dispositivoSelezionato.definisciDataPrevistaConsegna(dataPrevistaConsegna);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Errore TechRehab: Si è verificato un errore imprevisto.");
+        }
     }
     public Preventivo confermaPreventivo(){
-        return dispositivoSelezionato.confermaPreventivo();
+            return dispositivoSelezionato.confermaPreventivo();
     }
     public void accettaPreventivo(String descrizioneRiparazione, int codicePreventivo){
         Riparazione r=dispositivoSelezionato.nuovaRiparazione(descrizioneRiparazione,codicePreventivo);
@@ -141,6 +179,7 @@ public class TechRehab {
         String serialeDaRimuovere = scanner.next();
     
         if (!dispositivi.containsKey(serialeDaRimuovere)) {
+            scanner.close();
             throw new Exception("Dispositivo non trovato con il seriale: " + serialeDaRimuovere);
         }
     
@@ -155,11 +194,11 @@ public class TechRehab {
         } else {
             System.out.println("Rimozione annullata.");
         }
+        scanner.close();
     }
 
     public Dispositivo ricercaDispositivo(String seriale){
         return dispositivi.get(seriale);
     }
-    
 
 }
