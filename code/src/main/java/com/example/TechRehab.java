@@ -15,8 +15,12 @@ public class TechRehab {
     private Map<Integer, Riparazione> riparazioni;
     private Map<String, Ricambio> ricambi;
     private Map<String, Dispositivo> dispositivi;
+    private Map<Integer, Cliente> clienti;
+    private Map<Integer, Fattura> fatture;
     private Dispositivo dispositivoSelezionato;
     private Dispositivo dispositivoCorrente; 
+    private Fattura fatturaCorrente;
+    private Cliente clienteCorrente;
 
     private TechRehab() {
         this.riparazioni = new HashMap<>();
@@ -42,7 +46,9 @@ public class TechRehab {
     public Map<String, Dispositivo> getDispositivi() {
         return dispositivi;
     }
-
+    public Map<Integer, Fattura> getFatture() {
+        return fatture;
+    }
     public void loadRicambi() {
         ricambi.put("DP124353dd", new Ricambio("DP124353dd", "Display", 300.0f));
         ricambi.put("B2353", new Ricambio("B2353", "Batteria", 80.0f));
@@ -112,12 +118,20 @@ public class TechRehab {
             e.printStackTrace();
             System.err.println("Errore TechRehab: Si è verificato un errore imprevisto.");
         }
-    }
+    }  
     public Preventivo confermaPreventivo(){
             return dispositivoSelezionato.confermaPreventivo();
     }
     public void accettaPreventivo(String descrizioneRiparazione, int codicePreventivo){
         Riparazione r=dispositivoSelezionato.nuovaRiparazione(descrizioneRiparazione,codicePreventivo);
+        
+        //Registrazione dei provider di servizi nel Subject Riparazione (Pattern Observer Pull)
+        Observer email = new EmailProviderObserver(r);
+	    Observer sms = new SMSProviderObserver(r);
+        r.attach(email);
+        r.attach(sms);
+        //Fine registrazione
+        
         riparazioni.put(r.getCodice(),r);
         dispositivoSelezionato=null;
     }
@@ -144,6 +158,7 @@ public class TechRehab {
     public Riparazione terminaRiparazione(int codiceRiparazione) {
         Riparazione r = riparazioni.get(codiceRiparazione);
         r.setStato("Completato");
+        r.setDataFineRiparazione(LocalDate.now());
         return r;
     }
 
@@ -201,4 +216,88 @@ public class TechRehab {
         return dispositivi.get(seriale);
     }
 
+    public void emettiFattura(int codiceRiparazione){
+        Riparazione r = riparazioni.get(codiceRiparazione);
+        r.emettiFattura();
+        fatturaCorrente = r.getFattura();
+    }
+
+    public void confermaFattura(){
+        if (fatturaCorrente != null) {
+            fatture.put(fatturaCorrente.getCodice(), fatturaCorrente);
+            fatturaCorrente.stampaFattura();
+            fatturaCorrente = null;
+        }
+    }
+
+    public void consegnaDispositivo(int codicePreventivo){
+        for (Riparazione riparazione : riparazioni.values()) {
+            if (riparazione.getStato() == "Completato" && riparazione.getPreventivo().getCodice() == codicePreventivo) {
+                riparazione.setStato("Consegnato");
+                riparazione.stampaRiparazione();
+            }
+        }
+    }
+
+    public void presaInCaricoRiparazione(int codicePreventivo){
+        for (Riparazione riparazione : riparazioni.values()) {
+            if (riparazione.getStato() == null && riparazione.getPreventivo().getCodice() == codicePreventivo) {
+                riparazione.setStato("In Carico");
+            }
+        }
+    }    
+
+    public Cliente inserisciCliente(String nome, String cognome, String telefono, String email){
+        clienteCorrente =  new Cliente(nome, cognome, telefono, email);
+        return clienteCorrente;
+    }
+
+    public void modificaCliente(int ID, String nome, String cognome, String telefono, String email){
+        clienteCorrente = clienti.get(ID);
+        clienteCorrente.updateCliente(nome, cognome, telefono, email);
+        clienteCorrente = null;
+    }
+
+    public void confermaInserimentoCliente(){
+        clienti.put(clienteCorrente.getID(), clienteCorrente);
+        clienteCorrente =  null;
+    }
+
+    public void rimuoviCliente() throws Exception {
+        if (clienti.isEmpty()) {
+            System.out.println("Nessun cliente registrato.");
+            return;
+        }
+    
+        System.out.println("Lista dei clienti registrati:");
+        for (Cliente cliente : clienti.values()) {
+            System.out.println(cliente.getID() + ": " + cliente.getNome() + " " + cliente.getCognome());
+        }
+    
+        System.out.print("Inserisci l'ID del cliente da rimuovere: ");
+        Scanner scanner = new Scanner(System.in);
+        int IDDaRimuovere = scanner.nextInt();
+    
+        if (!clienti.containsKey(IDDaRimuovere)) {
+            scanner.close();
+            throw new Exception("Cliente non trovato con l'ID: " + IDDaRimuovere);
+        }
+    
+        Cliente clienteRimosso = clienti.get(IDDaRimuovere);
+    
+        System.out.println("Sei sicuro di voler rimuovere il cliente " + clienteRimosso.getNome() + " " + clienteRimosso.getCognome() + "? [Y/N]");
+    
+        String response = scanner.next();
+        if ("Y".equalsIgnoreCase(response)) {
+            clienti.remove(IDDaRimuovere);
+            System.out.println("Cliente rimosso con successo.");
+        } else {
+            System.out.println("Rimozione annullata.");
+        }
+        scanner.close();
+    }   
+
+    public Cliente ricercaCliente(int ID){
+        return clienti.get(ID);
+    }
 }

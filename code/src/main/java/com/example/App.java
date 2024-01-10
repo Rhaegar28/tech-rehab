@@ -19,6 +19,9 @@ public class App {
             System.out.println("1. Gestisci dispositivo");
             System.out.println("2. Emissione preventivo");
             System.out.println("3. Riparazione dispositivo");
+            System.out.println("4. Gestisci cliente");
+            System.out.println("5. Emissione fattura");
+            System.out.println("6. Consegna Dispositivo");
             System.out.println("0. Esci");
 
             System.out.print("Inserisci il numero corrispondente all'azione desiderata: ");
@@ -35,6 +38,15 @@ public class App {
                     case 3:
                         riparaDispositivo(techRehab, scanner);
                         break;
+                    case 4:
+                        gestisciCliente(techRehab, scanner);
+                        break;
+                    case 5:
+                        emettiFattura(techRehab, scanner);
+                        break;  
+                    case 6:
+                        consegnaDispositivo(techRehab, scanner);
+                        break;                      
                     case 0:
                         System.out.println("Uscita dal programma.");
                         break;
@@ -142,7 +154,88 @@ public class App {
     }
 
 
+    private static void gestisciCliente(TechRehab techRehab, Scanner scanner) throws Exception {
+        int scelta;
+        do {
+            System.out.println("Menu:");
+            System.out.println("1. Inserisci cliente");
+            System.out.println("2. Ricerca cliente");
+            System.out.println("3. Modifica cliente");
+            System.out.println("4. Rimuovi cliente");
+            System.out.println("0. Esci");
 
+            System.out.print("Inserisci il numero corrispondente all'azione desiderata: ");
+            scelta = scanner.nextInt();
+
+            switch (scelta) {
+                case 1:
+                    inserisciCliente(techRehab, scanner);
+                    break;
+                case 2:
+                    ricercaCliente(techRehab, scanner);
+                    break;
+                case 3:
+                    modificaCliente(techRehab, scanner);
+                    break;
+                case 4:
+                try {
+                    techRehab.rimuoviCliente();
+                } catch (Exception e) {
+                    System.err.println(e.getMessage());
+                }
+                    break;
+                case 0:
+                    System.out.println("Uscita dal menu gestione cliente.");
+                    break;
+                default:
+                    System.out.println("Scelta non valida. Riprova.");
+            }
+
+        } while (scelta != 0);
+    }
+
+    private static void inserisciCliente(TechRehab techRehab, Scanner scanner) {
+        System.out.print("Inserisci il nome del cliente: ");
+        String nome = scanner.next();
+        System.out.print("Inserisci il cognome del cliente: ");
+        String cognome = scanner.next();
+        System.out.print("Inserisci il numero di telefono del cliente: ");
+        String numeroTelefono = scanner.next();
+        System.out.print("Inserisci l'email del cliente: ");    
+        String email = scanner.next();
+ 
+        techRehab.inserisciCliente(nome, cognome, numeroTelefono, email);
+        techRehab.confermaInserimentoCliente();
+        System.out.println("Cliente inserito con successo.");
+    }
+
+    private static void ricercaCliente(TechRehab techRehab, Scanner scanner) {
+        System.out.print("Inserisci l' ID del cliente da cercare: ");
+        int ID = scanner.nextInt();
+        Cliente clienteRicercato = techRehab.ricercaCliente(ID);
+        if (clienteRicercato != null) {
+            System.out.println("Cliente trovato: " + clienteRicercato.getNome() + " " + clienteRicercato.getCognome() + " " + clienteRicercato.getEmail());
+        } else {
+            System.out.println("Cliente non trovato");
+        }
+    }   
+    
+    private static void modificaCliente(TechRehab techRehab, Scanner scanner) {
+        System.out.print("Inserisci l'ID del cliente da modificare: ");
+        int ID = scanner.nextInt();
+        System.out.print("Inserisci il nuovo Nome del cliente: ");
+        String nome = scanner.next();
+        System.out.print("Inserisci il nuovo Cognome del cliente: ");
+        String cognome = scanner.next();
+        System.out.print("Inserisci il nuovo Telefono del cliente: ");
+        String telefono = scanner.next();
+        System.out.print("Inserisci il nuovo Email del cliente: ");
+        String email = scanner.next();
+
+        techRehab.modificaCliente(ID, nome, cognome, telefono, email);
+        System.out.println("Cliente modificato con successo.");
+    }
+    
     private static void emettiPreventivo(TechRehab techRehab, Scanner scanner) {
         int codicePreventivo;
         nuovoPreventivo(techRehab, scanner);
@@ -168,7 +261,26 @@ public class App {
         definisciDataPrevistaConsegna(techRehab, scanner);
         codicePreventivo = confermaPreventivo(techRehab, scanner);
         accettaPreventivo(techRehab, codicePreventivo, scanner);
+        techRehab.presaInCaricoRiparazione(codicePreventivo);
     }
+
+    private static void emettiFattura(TechRehab techRehab, Scanner scanner) {
+        int codiceRiparazione;
+    
+        System.out.println("Inserisci il codice di riparazione per cui emettere la fattura: ");
+        codiceRiparazione = scanner.nextInt();   
+
+        techRehab.emettiFattura(codiceRiparazione);
+        techRehab.confermaFattura();
+    }
+
+    private static void consegnaDispositivo(TechRehab techRehab, Scanner scanner) {
+        System.out.println("Inserisci il codice del Preventivo relativo al dispositivo da consegnare: ");
+        int codicePreventivo = scanner.nextInt();
+        techRehab.consegnaDispositivo(codicePreventivo);
+    }
+
+
 
     private static void nuovoPreventivo(TechRehab techRehab, Scanner scanner) {
         System.out.print("Inserisci il seriale del dispositivo per il nuovo preventivo: ");
@@ -220,6 +332,7 @@ public class App {
             System.out.println("Input non valido. Inserisci un valore corretto per la data.");
         }
     }
+    
 
     private static int confermaPreventivo(TechRehab techRehab, Scanner scanner) {
         Preventivo p = techRehab.confermaPreventivo();

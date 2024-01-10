@@ -18,6 +18,8 @@ public class Preventivo {
     private List <Ricambio> listaRicambi;
     private Riparazione riparazione;
 
+    private Dispositivo dispositivo;
+
     public int getCodice() {
         return codice;
     }
@@ -30,7 +32,7 @@ public class Preventivo {
     public void setDataEmissione(LocalDate dataEmissione) {
         this.dataEmissione = dataEmissione;
     }
-    public  LocalDate getDataPrevistaConsegna() {
+    public LocalDate getDataPrevistaConsegna() {
         return dataPrevistaConsegna;
     }
     public void setDataPrevistaConsegna(LocalDate dataPrevistaConsegna) {
@@ -67,10 +69,11 @@ public class Preventivo {
         this.riparazione = riparazione;
     }
 
-    public Preventivo() {
+    public Preventivo(Dispositivo dispositivo) {
         this.codice=++count;
         this.dataEmissione=LocalDate.now();
         this.listaRicambi=  new ArrayList<>();
+        this.dispositivo=dispositivo;
     }
     public void aggiungiGuasto(Ricambio ricambio){
         this.listaRicambi.add(ricambio);
@@ -105,4 +108,15 @@ public class Preventivo {
         this.costoPrevisto = costo;
     }
     
+    public Dispositivo getDispositivo() {
+        return dispositivo;
+    }
+
+    public float getPrezziRicambi() {
+        float costo = 0;
+        for (Ricambio r:listaRicambi){
+            costo += r.getPrezzo();
+        }
+        return costo;
+    }
 }

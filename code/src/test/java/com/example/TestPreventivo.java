@@ -11,7 +11,9 @@ public class TestPreventivo {
 
     @Before
     public void setUp() {
-        preventivo = new Preventivo();
+        Dispositivo d = new Dispositivo("modello", "marca", "seriale"
+        , LocalDate.of(2024, 10, 2));
+        preventivo = new Preventivo(d);
     }
 
     @Test

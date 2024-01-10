@@ -1,12 +1,19 @@
 package com.example;
 
-public class Riparazione {
+import java.time.LocalDate;
+import java.time.Period;
+
+public class Riparazione extends Subject {
+
+    private static final float costoManodoperaH = 40f;
     private static int count=0;
     private int codice;
     private String descrizione;
     private String stato;
     private float oreManodopera;
     private Preventivo preventivo;
+    private LocalDate dataFineRiparazione;
+    private Fattura fattura;
 
     public int getCodice() {
         return codice;
@@ -25,6 +32,7 @@ public class Riparazione {
     }
     public void setStato(String stato) {
         this.stato = stato;
+        notifyObservers();
     }
     public float getOreManodopera() {
         return oreManodopera;
@@ -37,6 +45,14 @@ public class Riparazione {
     }
     public void setPreventivo(Preventivo preventivo) {
         this.preventivo = preventivo;
+    }
+
+    public LocalDate getDataFineRiparazione() {
+        return dataFineRiparazione;
+    } 
+
+    public void setDataFineRiparazione(LocalDate dataFineRiparazione) {
+        this.dataFineRiparazione = dataFineRiparazione;
     }
 
     public Riparazione(String descrizioneRiparazione, Preventivo preventivo) {
@@ -52,4 +68,80 @@ public class Riparazione {
         System.out.println("Stato: " + stato);
         System.out.println("Ore manodopera: " + oreManodopera);
     }
+
+    public void emettiFattura() {
+        fattura = new Fattura();
+        calcolaCosto();
+        //Registrazione dei provider di servizi nel Subject Fattura (Pattern Observer Pull)
+        Observer email = new EmailProviderObserver(fattura);
+        fattura.attach(email);
+        fattura.setStato(true);
+        //Fine registrazione        
+    }   
+
+    private float calcolaCostoDefinitivo(float cost) {
+
+        float costoRicambi = preventivo.getPrezziRicambi();
+
+        return this.oreManodopera * cost + costoRicambi;
+    }
+
+    public void calcolaCosto(){
+
+        float cost ;
+
+        //Gestione Strategy
+        Context context = new Context();
+
+        Dispositivo d = preventivo.getDispositivo();  
+
+        
+        if (preventivo.getCostoPrevisto() == 0) {
+            cost = 0;
+            fattura.setCostoDefinitivo(cost);
+
+        } else {
+
+            boolean priorita = preventivo.getPriorita();
+            float oreLavoroPreviste = preventivo.getOreLavoroPreviste();
+            LocalDate dataPrevistaConsegna = preventivo.getDataPrevistaConsegna();
+            cost = costoManodoperaH;
+
+            if (priorita == false && (this.oreManodopera - oreLavoroPreviste) <= 0 
+            && (Period.between(this.dataFineRiparazione, dataPrevistaConsegna).getDays()) < 3) {
+
+                //Regola di Dominio R1
+                fattura.setCostoDefinitivo(calcolaCostoDefinitivo(cost));
+
+            } else {
+                
+                if (priorita == true) {
+                    //Regola di Dominio R2
+                    context.setStrategy(new ClienteVIPStrategy());
+                    cost = context.eseguiStrategy(cost);
+                }
+
+                if ((this.oreManodopera - oreLavoroPreviste) > 0) {
+                    //Regola di Dominio R5
+                    context.setStrategy(new ScontoOreStrategy());
+                    cost = context.eseguiStrategy(cost);
+                }
+
+                if ((Period.between(this.dataFineRiparazione, dataPrevistaConsegna).getDays()) >= 3) {
+                    //Regola di Dominio R4
+                    context.setStrategy(new ScontoGiorniStrategy());
+                    cost = context.eseguiStrategy(cost);
+                }
+                
+                fattura.setCostoDefinitivo(calcolaCostoDefinitivo(cost));
+            }
+            
+        }   
+
+    }
+
+    public Fattura getFattura() {
+        return fattura;
+    }
+    
 }

@@ -35,7 +35,7 @@ public class Dispositivo {
     public void setFinegaranzia(LocalDate fineGaranzia) {
         this.fineGaranzia = fineGaranzia;
     }
-        public Preventivo getPreventivoCorrente() {
+    public Preventivo getPreventivoCorrente() {
         return preventivoCorrente;
     }
     public Map<Integer, Preventivo> getPreventivi() {
@@ -52,14 +52,15 @@ public class Dispositivo {
     
     public void nuovoPreventivo() {
         try {
-            preventivoCorrente = new Preventivo();
+            //aggiunto parametro Dispositivo che crea il preventivo nel costruttore del Preventivo
+            preventivoCorrente = new Preventivo(this);
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println("Errore Dispositivo: Si è verificato un errore imprevisto.");
         }
     }
 
-public void aggiungiGuasto(Ricambio ricambio) {
+    public void aggiungiGuasto(Ricambio ricambio) {
         try {
             if (preventivoCorrente == null) {
                 throw new Exception("Errore Dispositivo: Preventivo non inizializzato.");

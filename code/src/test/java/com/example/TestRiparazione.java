@@ -3,6 +3,9 @@ package com.example;
 
 import org.junit.Test;
 import static org.junit.Assert.*;
+
+import java.time.LocalDate;
+
 import org.junit.Before;
 
 
@@ -11,7 +14,9 @@ public class TestRiparazione {
 
     @Before
     public void setUp() {
-        riparazione = new Riparazione("Display rotto, sostituire il display", new Preventivo());
+        Dispositivo d = new Dispositivo("modello", "marca", "seriale"
+        , LocalDate.of(2024, 10, 2));        
+        riparazione = new Riparazione("Display rotto, sostituire il display", new Preventivo(d));
     }
     @Test
     public void testGetSetDescrizione() {
