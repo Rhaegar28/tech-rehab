@@ -377,11 +377,24 @@ public class App {
 
     private static void riparaDispositivo(TechRehab techRehab, Scanner scanner) {
         int codiceRiparazione;
-
+        String risposta;
         visualizzaRiparazioniInCorso(techRehab);
         codiceRiparazione = selezionaRiparazione(techRehab, scanner);
-        definisciOreManodopera(techRehab, codiceRiparazione, scanner);
-        terminaRiparazione(techRehab, codiceRiparazione);
+        System.out.println("I danni riscontrati sono fedeli alla descrizione? [S/N]");
+        while (true) {
+            risposta = scanner.next();
+            if (risposta.equalsIgnoreCase("S")) {
+                definisciOreManodopera(techRehab, codiceRiparazione, scanner);
+                terminaRiparazione(techRehab, codiceRiparazione);
+                break;
+            } else if (risposta.equalsIgnoreCase("N")) {
+                scanner.nextLine(); // Pulisce il buffer di input
+                techRehab.sospendiRiparazione(codiceRiparazione);
+                break;
+            } else {
+                System.out.println("Scelta non valida. Riprova.");
+            }
+        }
     }
 
     private static void visualizzaRiparazioniCompletate(TechRehab techRehab) {

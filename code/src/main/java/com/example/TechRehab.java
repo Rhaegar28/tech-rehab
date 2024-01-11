@@ -143,6 +143,10 @@ public class TechRehab {
         r.setDataFineRiparazione(LocalDate.now());
         return r;
     }
+    public void sospendiRiparazione(int codiceRiparazione) {
+        Riparazione r = riparazioni.get(codiceRiparazione);
+        r.setStato("In sospeso");
+    }
 
     public void inserisciDispositivo(int IDCliente, String marca, String modello, String seriale, LocalDate fineGaranzia){
         clienteCorrente = clienti.get(IDCliente);
