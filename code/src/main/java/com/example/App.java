@@ -43,10 +43,10 @@ public class App {
                         break;
                     case 5:
                         emettiFattura(techRehab, scanner);
-                        break;  
+                        break;
                     case 6:
                         consegnaDispositivo(techRehab, scanner);
-                        break;                      
+                        break;
                     case 0:
                         System.out.println("Uscita dal programma.");
                         break;
@@ -72,6 +72,8 @@ public class App {
 
     private static void gestisciDispositivo(TechRehab techRehab, Scanner scanner) throws Exception {
         int scelta;
+        System.out.print("Inserisci l'ID del cliente: ");
+        int IDCliente = scanner.nextInt();
         do {
             System.out.println("Menu:");
             System.out.println("1. Inserisci dispositivo");
@@ -81,24 +83,25 @@ public class App {
             System.out.println("0. Esci");
 
             System.out.print("Inserisci il numero corrispondente all'azione desiderata: ");
+            scanner.nextLine(); // Pulisce il buffer di input
             scelta = scanner.nextInt();
 
             switch (scelta) {
                 case 1:
-                    inserisciDispositivo(techRehab, scanner);
+                    inserisciDispositivo(IDCliente, techRehab, scanner);
                     break;
                 case 2:
-                    ricercaDispositivo(techRehab, scanner);
+                    ricercaDispositivo(IDCliente, techRehab, scanner);
                     break;
                 case 3:
-                    modificaDispositivo(techRehab, scanner);
+                    modificaDispositivo(IDCliente, techRehab, scanner);
                     break;
                 case 4:
-                try {
-                    techRehab.rimuoviDispositivo();
-                } catch (Exception e) {
-                    System.err.println(e.getMessage());
-                }
+                    try {
+                        techRehab.rimuoviDispositivo(IDCliente, scanner);
+                    } catch (Exception e) {
+                        System.err.println(e.getMessage());
+                    }
                     break;
                 case 0:
                     System.out.println("Uscita dal menu gestione dispositivo.");
@@ -110,17 +113,18 @@ public class App {
         } while (scelta != 0);
     }
 
-    private static void inserisciDispositivo(TechRehab techRehab, Scanner scanner) {
+    private static void inserisciDispositivo(int IDCliente, TechRehab techRehab, Scanner scanner) {
         System.out.print("Inserisci la marca del dispositivo: ");
         String marca = scanner.next();
+        scanner.nextLine(); // Pulisce il buffer di input
         System.out.print("Inserisci il modello del dispositivo: ");
-        String modello = scanner.next();
+        String modello = scanner.nextLine();
         System.out.print("Inserisci il seriale del dispositivo: ");
         String seriale = scanner.next();
         System.out.print("Inserisci la data di fine garanzia (YYYY-MM-DD): ");
         try {
             LocalDate fineGaranzia = LocalDate.parse(scanner.next());
-            techRehab.inserisciDispositivo(marca, modello, seriale, fineGaranzia);
+            techRehab.inserisciDispositivo(IDCliente, marca, modello, seriale, fineGaranzia);
             techRehab.confermaInserimentoDispositivo();
             System.out.println("Dispositivo inserito con successo.");
         } catch (DateTimeParseException e) {
@@ -128,31 +132,31 @@ public class App {
         }
     }
 
-    private static void ricercaDispositivo(TechRehab techRehab, Scanner scanner) {
+    private static void ricercaDispositivo(int IDCliente, TechRehab techRehab, Scanner scanner) {
         System.out.print("Inserisci il seriale del dispositivo da cercare: ");
         String seriale = scanner.next();
-        Dispositivo dispositivoRicercato = techRehab.ricercaDispositivo(seriale);
+        Dispositivo dispositivoRicercato = techRehab.ricercaDispositivo(IDCliente, seriale);
         if (dispositivoRicercato != null) {
-            System.out.println("Dispositivo trovato: " + dispositivoRicercato.getMarca() + " " + dispositivoRicercato.getModello() + " " + dispositivoRicercato.getFinegaranzia());
+            System.out.println("Dispositivo trovato: " + dispositivoRicercato.getMarca() + " "
+                    + dispositivoRicercato.getModello() + " " + dispositivoRicercato.getFineGaranzia());
         } else {
             System.out.println("Dispositivo non trovato");
         }
     }
 
-    private static void modificaDispositivo(TechRehab techRehab, Scanner scanner) {
+    private static void modificaDispositivo(int IDCliente, TechRehab techRehab, Scanner scanner) {
         System.out.print("Inserisci il seriale del dispositivo da modificare: ");
         String seriale = scanner.next();
-        System.out.print("Inserisci la nuova marca del dispositivo: ");
-        String marca = scanner.next();
-        System.out.print("Inserisci il nuovo modello del dispositivo: ");
-        String modello = scanner.next();
+        if (techRehab.ricercaDispositivo(IDCliente, seriale) == null) {
+            System.out.println("Errore: Seriale del dispositivo non valido. Modifica non effettuata.");
+            return;
+        }
         System.out.print("Inserisci la nuova data di fine garanzia (YYYY-MM-DD): ");
         LocalDate fineGaranzia = LocalDate.parse(scanner.next());
 
-        techRehab.modificaDispositivo(seriale, marca, modello, fineGaranzia);
+        techRehab.modificaDispositivo(IDCliente, seriale, fineGaranzia);
         System.out.println("Dispositivo modificato con successo.");
     }
-
 
     private static void gestisciCliente(TechRehab techRehab, Scanner scanner) throws Exception {
         int scelta;
@@ -178,11 +182,11 @@ public class App {
                     modificaCliente(techRehab, scanner);
                     break;
                 case 4:
-                try {
-                    techRehab.rimuoviCliente();
-                } catch (Exception e) {
-                    System.err.println(e.getMessage());
-                }
+                    try {
+                        techRehab.rimuoviCliente(scanner);
+                    } catch (Exception e) {
+                        System.err.println(e.getMessage());
+                    }
                     break;
                 case 0:
                     System.out.println("Uscita dal menu gestione cliente.");
@@ -201,9 +205,9 @@ public class App {
         String cognome = scanner.next();
         System.out.print("Inserisci il numero di telefono del cliente: ");
         String numeroTelefono = scanner.next();
-        System.out.print("Inserisci l'email del cliente: ");    
+        System.out.print("Inserisci l'email del cliente: ");
         String email = scanner.next();
- 
+
         techRehab.inserisciCliente(nome, cognome, numeroTelefono, email);
         techRehab.confermaInserimentoCliente();
         System.out.println("Cliente inserito con successo.");
@@ -214,61 +218,79 @@ public class App {
         int ID = scanner.nextInt();
         Cliente clienteRicercato = techRehab.ricercaCliente(ID);
         if (clienteRicercato != null) {
-            System.out.println("Cliente trovato: " + clienteRicercato.getNome() + " " + clienteRicercato.getCognome() + " " + clienteRicercato.getEmail());
+            System.out.println("Cliente trovato: " + clienteRicercato.getNome() + " " + clienteRicercato.getCognome()
+                    + " " + clienteRicercato.getEmail());
         } else {
             System.out.println("Cliente non trovato");
         }
-    }   
-    
+    }
+
     private static void modificaCliente(TechRehab techRehab, Scanner scanner) {
         System.out.print("Inserisci l'ID del cliente da modificare: ");
         int ID = scanner.nextInt();
-        System.out.print("Inserisci il nuovo Nome del cliente: ");
-        String nome = scanner.next();
-        System.out.print("Inserisci il nuovo Cognome del cliente: ");
-        String cognome = scanner.next();
+        if (techRehab.ricercaCliente(ID) == null) {
+            System.out.println("Errore: ID del cliente non valido. Modifica non effettuata.");
+            return;
+        }
         System.out.print("Inserisci il nuovo Telefono del cliente: ");
         String telefono = scanner.next();
         System.out.print("Inserisci il nuovo Email del cliente: ");
         String email = scanner.next();
 
-        techRehab.modificaCliente(ID, nome, cognome, telefono, email);
+        techRehab.modificaCliente(ID, telefono, email);
         System.out.println("Cliente modificato con successo.");
     }
-    
+
     private static void emettiPreventivo(TechRehab techRehab, Scanner scanner) {
         int codicePreventivo;
-        nuovoPreventivo(techRehab, scanner);
-        while (true) {
-            System.out.println("Vuoi aggiungere un guasto al preventivo? [Y/N]");
-            String risposta = scanner.next().toUpperCase();
-            if (risposta.equals("Y")) {
-                try {
-                    aggiungiGuasto(techRehab, scanner);
-                } catch (InputMismatchException e) {
-                    System.out.println("Input non valido. Inserisci un valore corretto.");
-                    scanner.next();
+        String risposta;
+        if (nuovoPreventivo(techRehab, scanner)) {
+            while (true) {
+                System.out.println("Vuoi aggiungere un guasto al preventivo? [S/N]");
+                risposta = scanner.next();
+                if (risposta.equalsIgnoreCase("S")) {
+                    try {
+                        aggiungiGuasto(techRehab, scanner);
+                    } catch (InputMismatchException e) {
+                        System.out.println("Input non valido. Inserisci un valore corretto.");
+                        scanner.next();
+                    }
+                } else if (risposta.equalsIgnoreCase("N")) {
+                    scanner.nextLine(); // Pulisce il buffer di input
+                    break;
+                } else {
+                    System.out.println("Scelta non valida. Riprova.");
                 }
-            } else if (risposta.equals("N")) {
-                scanner.nextLine(); // Pulisce il buffer di input
-                break;
-            } else {
-                System.out.println("Scelta non valida. Riprova.");
+            }
+            definisciPriorita(techRehab, scanner);
+            definisciOreLavoroPreviste(techRehab, scanner);
+            definisciDataPrevistaConsegna(techRehab, scanner);
+            codicePreventivo = confermaPreventivo(techRehab, scanner);
+
+            System.out.println("Vuoi accettare il preventivo? [S/N]");
+            while (true) {
+                risposta = scanner.next();
+                if (risposta.equalsIgnoreCase("S")) {
+                    accettaPreventivo(techRehab, codicePreventivo, scanner);
+                    techRehab.presaInCaricoRiparazione(codicePreventivo);
+                    break;
+                } else if (risposta.equalsIgnoreCase("N")) {
+                    scanner.nextLine(); // Pulisce il buffer di input
+                    techRehab.rifiutaPreventivo(codicePreventivo);
+                    break;
+                } else {
+                    System.out.println("Scelta non valida. Riprova.");
+                }
             }
         }
-        definisciPriorita(techRehab, scanner);
-        definisciOreLavoroPreviste(techRehab, scanner);
-        definisciDataPrevistaConsegna(techRehab, scanner);
-        codicePreventivo = confermaPreventivo(techRehab, scanner);
-        accettaPreventivo(techRehab, codicePreventivo, scanner);
-        techRehab.presaInCaricoRiparazione(codicePreventivo);
     }
 
     private static void emettiFattura(TechRehab techRehab, Scanner scanner) {
         int codiceRiparazione;
-    
+
+        visualizzaRiparazioniCompletate(techRehab);
         System.out.println("Inserisci il codice di riparazione per cui emettere la fattura: ");
-        codiceRiparazione = scanner.nextInt();   
+        codiceRiparazione = scanner.nextInt();
 
         techRehab.emettiFattura(codiceRiparazione);
         techRehab.confermaFattura();
@@ -280,13 +302,19 @@ public class App {
         techRehab.consegnaDispositivo(codicePreventivo);
     }
 
+    private static boolean nuovoPreventivo(TechRehab techRehab, Scanner scanner) {
+        System.out.print("Inserisci l'ID del cliente proprietario del dispositivo: ");
+        int IDCliente = scanner.nextInt();
 
-
-    private static void nuovoPreventivo(TechRehab techRehab, Scanner scanner) {
         System.out.print("Inserisci il seriale del dispositivo per il nuovo preventivo: ");
         String serialeDispositivo = scanner.next();
-        techRehab.nuovoPreventivo(serialeDispositivo);
+        if (techRehab.ricercaDispositivo(IDCliente, serialeDispositivo) == null) {
+            System.out.println("Errore: Seriale del dispositivo non valido. Preventivo non creato.");
+            return false;
+        }
+        techRehab.nuovoPreventivo(serialeDispositivo, IDCliente);
         System.out.println("Nuovo preventivo creato per il dispositivo con seriale " + serialeDispositivo + ".");
+        return true;
     }
 
     private static void aggiungiGuasto(TechRehab techRehab, Scanner scanner) {
@@ -319,20 +347,18 @@ public class App {
             System.out.println("Input non valido. Inserisci un valore numerico corretto per le ore di lavoro.");
         }
     }
-    
 
     private static void definisciDataPrevistaConsegna(TechRehab techRehab, Scanner scanner) {
-        System.out.print("Definisci la data prevista di consegna del preventivo (YYYY-MM-DD): ");
+        System.out.print("Definisci la data prevista di consegna del dispositivo (YYYY-MM-DD): ");
         String inputDataPrevistaConsegna = scanner.nextLine();
         try {
             LocalDate dataPrevistaConsegna = LocalDate.parse(inputDataPrevistaConsegna);
             techRehab.definisciDataPrevistaConsegna(dataPrevistaConsegna);
-            System.out.println("Data prevista di consegna del preventivo definita con successo.");
+            System.out.println("Data prevista di consegna del dispositivo definita con successo.");
         } catch (InputMismatchException e) {
             System.out.println("Input non valido. Inserisci un valore corretto per la data.");
         }
     }
-    
 
     private static int confermaPreventivo(TechRehab techRehab, Scanner scanner) {
         Preventivo p = techRehab.confermaPreventivo();
@@ -343,6 +369,7 @@ public class App {
 
     private static void accettaPreventivo(TechRehab techRehab, int codicePreventivo, Scanner scanner) {
         System.out.print("Inserisci la descrizione della riparazione: ");
+        scanner.nextLine(); // Pulisce il buffer di input
         String descrizioneRiparazione = scanner.nextLine();
         techRehab.accettaPreventivo(descrizioneRiparazione, codicePreventivo);
         System.out.println("Preventivo accettato e riparazione creata con successo.");
@@ -357,11 +384,21 @@ public class App {
         terminaRiparazione(techRehab, codiceRiparazione);
     }
 
+    private static void visualizzaRiparazioniCompletate(TechRehab techRehab) {
+        List<Riparazione> riparazioniCompletate = techRehab.ottieniRiparazioniCompletate();
+        System.out.println("Riparazioni completate:");
+        for (Riparazione riparazione : riparazioniCompletate) {
+            System.out.println("Codice: " + riparazione.getCodice() + ", Descrizione: " + riparazione.getDescrizione()
+                    + ", Stato: " + riparazione.getStato());
+        }
+    }
+
     private static void visualizzaRiparazioniInCorso(TechRehab techRehab) {
-        List<Riparazione> riparazioniInCorso = techRehab.ottieniRiparazioni();
+        List<Riparazione> riparazioniInCorso = techRehab.ottieniRiparazioniInCorso();
         System.out.println("Riparazioni in corso:");
         for (Riparazione riparazione : riparazioniInCorso) {
-            System.out.println("Codice: " + riparazione.getCodice() + ", Descrizione: " + riparazione.getDescrizione() + ", Stato: " + riparazione.getStato());
+            System.out.println("Codice: " + riparazione.getCodice() + ", Descrizione: " + riparazione.getDescrizione()
+                    + ", Stato: " + riparazione.getStato());
         }
     }
 

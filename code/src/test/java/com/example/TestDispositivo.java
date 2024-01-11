@@ -36,7 +36,7 @@ public class TestDispositivo {
     public void testGaranzia() {
         LocalDate dataFineGaranzia = LocalDate.parse("2023-12-31");
         dispositivo.setFinegaranzia(dataFineGaranzia);
-        LocalDate garanzia = dispositivo.getFinegaranzia();
+        LocalDate garanzia = dispositivo.getFineGaranzia();
         assertEquals(dataFineGaranzia, garanzia);
     }
 

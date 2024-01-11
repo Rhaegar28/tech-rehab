@@ -29,7 +29,7 @@ public class Dispositivo {
     public void setSeriale(String seriale) {
         this.seriale = seriale;
     }
-    public LocalDate getFinegaranzia() {
+    public LocalDate getFineGaranzia() {
         return fineGaranzia;
     }
     public void setFinegaranzia(LocalDate fineGaranzia) {
@@ -97,12 +97,7 @@ public class Dispositivo {
         return preventivi.get(codicePreventivo).nuovaRiparazione(descrizioneRiparazione);
     }
 
-    public void updateDispositivo(String marca, String modello, LocalDate fineGaranzia){
-        if (marca != null)
-            setMarca(marca);
-        if (modello != null)
-            setModello(modello);
-        if (fineGaranzia != null)
-            setFinegaranzia(fineGaranzia);
+    public void cancellaPreventivo(int codicePreventivo){
+        preventivi.remove(codicePreventivo);
     }
 }

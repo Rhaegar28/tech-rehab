@@ -92,9 +92,6 @@ public class Riparazione extends Subject {
 
         //Gestione Strategy
         Context context = new Context();
-
-        Dispositivo d = preventivo.getDispositivo();  
-
         
         if (preventivo.getCostoPrevisto() == 0) {
             cost = 0;
@@ -108,7 +105,7 @@ public class Riparazione extends Subject {
             cost = costoManodoperaH;
 
             if (priorita == false && (this.oreManodopera - oreLavoroPreviste) <= 0 
-            && (Period.between(this.dataFineRiparazione, dataPrevistaConsegna).getDays()) < 3) {
+            && (Period.between(dataPrevistaConsegna, this.dataFineRiparazione).getDays()) < 3) {
 
                 //Regola di Dominio R1
                 fattura.setCostoDefinitivo(calcolaCostoDefinitivo(cost));
@@ -126,14 +123,14 @@ public class Riparazione extends Subject {
                     context.setStrategy(new ScontoOreStrategy());
                     cost = context.eseguiStrategy(cost);
                 }
-
-                if ((Period.between(this.dataFineRiparazione, dataPrevistaConsegna).getDays()) >= 3) {
+              
+                if ((Period.between(dataPrevistaConsegna, this.dataFineRiparazione).getDays()) >= 3) {
                     //Regola di Dominio R4
                     context.setStrategy(new ScontoGiorniStrategy());
                     cost = context.eseguiStrategy(cost);
                 }
                 
-                fattura.setCostoDefinitivo(calcolaCostoDefinitivo(cost));
+                fattura.setCostoDefinitivo(Math.round((calcolaCostoDefinitivo(cost) * 100.00) / 100.00));
             }
             
         }   

@@ -21,7 +21,7 @@ public class EmailProviderObserver implements Observer {
         }
         else if (subject instanceof Riparazione) {
             observerStateRiparazione = ((Riparazione)subject).getStato();
-            System.out.println("Riparazione è nello stato " + observerStateRiparazione);
+            System.out.println("email: Riparazione è nello stato " + observerStateRiparazione);
         }
         
     }

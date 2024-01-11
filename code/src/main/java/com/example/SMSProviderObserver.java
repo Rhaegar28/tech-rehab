@@ -12,7 +12,7 @@ public class SMSProviderObserver implements Observer {
     @Override
     public void update() {
         observerState = subject.getStato();
-        System.out.println("Riparazione è nello stato " + observerState);
+        System.out.println("SMS: Riparazione è nello stato " + observerState);
     }
  
 }

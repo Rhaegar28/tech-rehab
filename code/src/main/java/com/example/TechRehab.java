@@ -14,20 +14,23 @@ public class TechRehab {
     private static TechRehab techRehab;
     private Map<Integer, Riparazione> riparazioni;
     private Map<String, Ricambio> ricambi;
-    private Map<String, Dispositivo> dispositivi;
+//    private Map<String, Dispositivo> dispositivi;
     private Map<Integer, Cliente> clienti;
     private Map<Integer, Fattura> fatture;
-    private Dispositivo dispositivoSelezionato;
-    private Dispositivo dispositivoCorrente; 
+//    private Dispositivo dispositivoSelezionato;
+//    private Dispositivo dispositivoCorrente;
     private Fattura fatturaCorrente;
     private Cliente clienteCorrente;
 
     private TechRehab() {
         this.riparazioni = new HashMap<>();
         this.ricambi = new HashMap<>();
-        this.dispositivi = new HashMap<>();
+        this.clienti = new HashMap<>();
+        this.fatture = new HashMap<>();
         loadRicambi();
-        loadDispositivi();
+        loadClienti();
+        clienti.get(1).loadDispositivi1();
+        clienti.get(2).loadDispositivi2();
     }
 
     public static TechRehab getInstance() {
@@ -37,14 +40,8 @@ public class TechRehab {
         return techRehab;
     }
 
-    public Dispositivo getDispositivoSelezionato() {
-        return dispositivoSelezionato;
-    }
     public Map<Integer, Riparazione> getRiparazioni() {
         return riparazioni;
-    }
-    public Map<String, Dispositivo> getDispositivi() {
-        return dispositivi;
     }
     public Map<Integer, Fattura> getFatture() {
         return fatture;
@@ -55,76 +52,49 @@ public class TechRehab {
         ricambi.put("FC887", new Ricambio("FC887", "Fotocamera", 306.35f));
     }
 
-    public void loadDispositivi() {
-        dispositivi.put("SM-G930", new Dispositivo("S7", "Samsung", "SM-G930", LocalDate.parse("2018-12-31")));
-        dispositivi.put("SM-S918B", new Dispositivo("S23 ultra", "Samsung", "SM-S918B", LocalDate.parse("2026-12-31")));
-        dispositivi.put("23116PN5BC", new Dispositivo("14 ultra", "Xiaomi", "23116PN5BC", LocalDate.parse("2023-12-31")));
+    public void loadClienti() {
+        clienti.put(1, new Cliente("Mario", "Rossi", "3331234567", "mario.rossi@gmail.com"));
+        clienti.put(2, new Cliente("Luigi", "Verdi", "3337654321", "luigi.verdi@gmail.com"));
+        clienti.put(3, new Cliente("Angelo", "Frasca", "3331573244", "angelo.frasca@libero.it"));
     }
 
-    public void nuovoPreventivo(String serialeDispositivo) {
+    public void nuovoPreventivo(String serialeDispositivo, int IDCliente) {
         try {
-            dispositivoSelezionato=dispositivi.get(serialeDispositivo);
-            if (dispositivoSelezionato == null) {
-                throw new Exception("Errore TechRehab: Dispositivo non trovato.");
+            clienteCorrente=clienti.get(IDCliente);
+            if (clienteCorrente == null) {
+                throw new Exception("Errore: Cliente non trovato.");
             }
-            dispositivoSelezionato.nuovoPreventivo();
+            clienteCorrente.nuovoPreventivo(serialeDispositivo);
         } catch (Exception e) {
             e.printStackTrace();
-            System.err.println("Errore TechRehab: Si è verificato un errore imprevisto.");
+            System.err.println("Errore: Si è verificato un errore imprevisto.");
         }
     }
 
     public void aggiungiGuasto(String serialeRicambio){
         Ricambio ricambioSelezionato=ricambi.get(serialeRicambio);
-        try {
-            if (dispositivoSelezionato == null) {
-                throw new Exception("Errore TechRehab: Dispositivo non trovato.");
-            }
-            dispositivoSelezionato.aggiungiGuasto(ricambioSelezionato);
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.err.println("Errore TechRehab: Si è verificato un errore imprevisto.");
-        }
+        clienteCorrente.aggiungiGuasto(ricambioSelezionato);
     }
+
     public void definisciPriorita(boolean priorita){
-        try {
-            if (dispositivoSelezionato == null) {
-                throw new Exception("Errore TechRehab: Dispositivo non trovato.");
-            }
-            dispositivoSelezionato.definisciPriorita(priorita);
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.err.println("Errore TechRehab: Si è verificato un errore imprevisto.");
-        }
+        clienteCorrente.definisciPriorita(priorita);
     }
+
     public void definisciOreLavoroPreviste(float orePreviste){
-        try {
-            if (dispositivoSelezionato == null) {
-                throw new Exception("Errore TechRehab: Dispositivo non trovato.");
-            }
-            dispositivoSelezionato.definisciOreLavoroPreviste(orePreviste);
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.err.println("Errore TechRehab: Si è verificato un errore imprevisto.");
-        }
+        clienteCorrente.definisciOreLavoroPreviste(orePreviste);
     }
+
     public void definisciDataPrevistaConsegna(LocalDate dataPrevistaConsegna){
-        try {
-            if (dispositivoSelezionato == null) {
-                throw new Exception("Errore TechRehab: Dispositivo non trovato.");
-            }
-            dispositivoSelezionato.definisciDataPrevistaConsegna(dataPrevistaConsegna);
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.err.println("Errore TechRehab: Si è verificato un errore imprevisto.");
-        }
-    }  
-    public Preventivo confermaPreventivo(){
-            return dispositivoSelezionato.confermaPreventivo();
+        clienteCorrente.definisciDataPrevistaConsegna(dataPrevistaConsegna);
     }
+
+    public Preventivo confermaPreventivo(){
+        return clienteCorrente.confermaPreventivo();
+    }
+
     public void accettaPreventivo(String descrizioneRiparazione, int codicePreventivo){
-        Riparazione r=dispositivoSelezionato.nuovaRiparazione(descrizioneRiparazione,codicePreventivo);
-        
+        Riparazione r = clienteCorrente.nuovaRiparazione(descrizioneRiparazione, codicePreventivo);
+       
         //Registrazione dei provider di servizi nel Subject Riparazione (Pattern Observer Pull)
         Observer email = new EmailProviderObserver(r);
 	    Observer sms = new SMSProviderObserver(r);
@@ -133,13 +103,25 @@ public class TechRehab {
         //Fine registrazione
         
         riparazioni.put(r.getCodice(),r);
-        dispositivoSelezionato=null;
+        clienteCorrente = null;
     }
 
-    public List<Riparazione> ottieniRiparazioni(){
+    public void rifiutaPreventivo(int codicePreventivo){
+        clienteCorrente.rifiutaPreventivo(codicePreventivo);
+    }
+
+    public List<Riparazione> ottieniRiparazioniInCorso(){
         return riparazioni.values()
                 .stream()
                 .filter(r->r.getStato().equals("In lavorazione") || r.getStato().equals("In carico"))
+                .sorted(Comparator.comparingInt(r -> r.getPreventivo().getPriorita() ? 0 : 1))
+                .collect(Collectors.toList());
+    }
+
+    public List<Riparazione> ottieniRiparazioniCompletate(){
+        return riparazioni.values()
+                .stream()
+                .filter(r->r.getStato().equals("Completato"))
                 .sorted(Comparator.comparingInt(r -> r.getPreventivo().getPriorita() ? 0 : 1))
                 .collect(Collectors.toList());
     }
@@ -162,58 +144,26 @@ public class TechRehab {
         return r;
     }
 
-    public Dispositivo inserisciDispositivo(String marca, String modello, String seriale, LocalDate fineGaranzia){
-        dispositivoCorrente =  new Dispositivo(modello, marca, seriale, fineGaranzia);
-        return dispositivoCorrente;
+    public void inserisciDispositivo(int IDCliente, String marca, String modello, String seriale, LocalDate fineGaranzia){
+        clienteCorrente = clienti.get(IDCliente);
+        clienteCorrente.inserisciDispositivo(marca, modello, seriale, fineGaranzia);
     }
 
     public void confermaInserimentoDispositivo(){
-        dispositivi.put(dispositivoCorrente.getSeriale(), dispositivoCorrente);
-        dispositivoCorrente =  null;
+        clienteCorrente.confermaInserimentoDispositivo();
+        clienteCorrente = null;
     }
 
-    public void modificaDispositivo(String seriale, String marca, String modello, LocalDate fineGaranzia){
-        dispositivoCorrente = dispositivi.get(seriale);
-        dispositivoCorrente.updateDispositivo(marca, modello, fineGaranzia);
-        dispositivoCorrente = null;
+    public void modificaDispositivo(int IDCliente, String seriale, LocalDate fineGaranzia){
+        clienti.get(IDCliente).modificaDispositivo(seriale, fineGaranzia);
     }
 
-    public void rimuoviDispositivo() throws Exception {
-        if (dispositivi.isEmpty()) {
-            System.out.println("Nessun dispositivo registrato.");
-            return;
-        }
-    
-        System.out.println("Lista dei dispositivi registrati:");
-        for (Dispositivo dispositivo : dispositivi.values()) {
-            System.out.println(dispositivo.getSeriale() + ": " + dispositivo.getMarca() + " " + dispositivo.getModello());
-        }
-    
-        System.out.print("Inserisci il seriale del dispositivo da rimuovere: ");
-        Scanner scanner = new Scanner(System.in);
-        String serialeDaRimuovere = scanner.next();
-    
-        if (!dispositivi.containsKey(serialeDaRimuovere)) {
-            scanner.close();
-            throw new Exception("Dispositivo non trovato con il seriale: " + serialeDaRimuovere);
-        }
-    
-        Dispositivo dispositivoRimosso = dispositivi.get(serialeDaRimuovere);
-    
-        System.out.println("Sei sicuro di voler rimuovere il dispositivo " + dispositivoRimosso.getMarca() + " " + dispositivoRimosso.getModello() + "? [Y/N]");
-    
-        String response = scanner.next();
-        if ("Y".equalsIgnoreCase(response)) {
-            dispositivi.remove(serialeDaRimuovere);
-            System.out.println("Dispositivo rimosso con successo.");
-        } else {
-            System.out.println("Rimozione annullata.");
-        }
-        scanner.close();
+    public void rimuoviDispositivo(int IDCliente, Scanner scanner) throws Exception {
+        clienti.get(IDCliente).rimuoviDispositivo(scanner);
     }
 
-    public Dispositivo ricercaDispositivo(String seriale){
-        return dispositivi.get(seriale);
+    public Dispositivo ricercaDispositivo(int IDCliente, String seriale){
+        return clienti.get(IDCliente).ricercaDispositivo(seriale);
     }
 
     public void emettiFattura(int codiceRiparazione){
@@ -252,9 +202,9 @@ public class TechRehab {
         return clienteCorrente;
     }
 
-    public void modificaCliente(int ID, String nome, String cognome, String telefono, String email){
+    public void modificaCliente(int ID, String telefono, String email){
         clienteCorrente = clienti.get(ID);
-        clienteCorrente.updateCliente(nome, cognome, telefono, email);
+        clienteCorrente.updateCliente(telefono, email);
         clienteCorrente = null;
     }
 
@@ -263,7 +213,7 @@ public class TechRehab {
         clienteCorrente =  null;
     }
 
-    public void rimuoviCliente() throws Exception {
+    public void rimuoviCliente(Scanner scanner) throws Exception {
         if (clienti.isEmpty()) {
             System.out.println("Nessun cliente registrato.");
             return;
@@ -275,26 +225,23 @@ public class TechRehab {
         }
     
         System.out.print("Inserisci l'ID del cliente da rimuovere: ");
-        Scanner scanner = new Scanner(System.in);
         int IDDaRimuovere = scanner.nextInt();
     
         if (!clienti.containsKey(IDDaRimuovere)) {
-            scanner.close();
             throw new Exception("Cliente non trovato con l'ID: " + IDDaRimuovere);
         }
     
         Cliente clienteRimosso = clienti.get(IDDaRimuovere);
     
-        System.out.println("Sei sicuro di voler rimuovere il cliente " + clienteRimosso.getNome() + " " + clienteRimosso.getCognome() + "? [Y/N]");
+        System.out.println("Sei sicuro di voler rimuovere il cliente " + clienteRimosso.getNome() + " " + clienteRimosso.getCognome() + "? [S/N]");
     
         String response = scanner.next();
-        if ("Y".equalsIgnoreCase(response)) {
+        if ("S".equalsIgnoreCase(response)) {
             clienti.remove(IDDaRimuovere);
             System.out.println("Cliente rimosso con successo.");
         } else {
             System.out.println("Rimozione annullata.");
         }
-        scanner.close();
     }   
 
     public Cliente ricercaCliente(int ID){

@@ -98,14 +98,17 @@ public class Preventivo {
     }
 
     public void setCostoPrevisto() {
-        float costo = COSTO_MANODOPERA * oreLavoroPreviste;
-        if (priorita) {
-            costo += costo * SOVRAPPREZZO_VIP;
+        if (verificaGaranzia()) {
+            this.costoPrevisto = 0;
         }
-        for (Ricambio r:listaRicambi){
-            costo += r.getPrezzo();
+        else {
+            float costo = COSTO_MANODOPERA * oreLavoroPreviste;
+            if (priorita) {
+                costo += costo * SOVRAPPREZZO_VIP;
+            }
+            costo += getPrezziRicambi();
+            this.costoPrevisto = costo;
         }
-        this.costoPrevisto = costo;
     }
     
     public Dispositivo getDispositivo() {
@@ -118,5 +121,13 @@ public class Preventivo {
             costo += r.getPrezzo();
         }
         return costo;
+    }
+
+    private boolean verificaGaranzia() {
+        if (this.dataEmissione.isBefore(dispositivo.getFineGaranzia())) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
