@@ -14,11 +14,8 @@ public class TechRehab {
     private static TechRehab techRehab;
     private Map<Integer, Riparazione> riparazioni;
     private Map<String, Ricambio> ricambi;
-//    private Map<String, Dispositivo> dispositivi;
     private Map<Integer, Cliente> clienti;
     private Map<Integer, Fattura> fatture;
-//    private Dispositivo dispositivoSelezionato;
-//    private Dispositivo dispositivoCorrente;
     private Fattura fatturaCorrente;
     private Cliente clienteCorrente;
 
@@ -39,7 +36,9 @@ public class TechRehab {
         }
         return techRehab;
     }
-
+    public Cliente getClienteCorrente() {
+        return clienteCorrente;
+    }
     public Map<Integer, Riparazione> getRiparazioni() {
         return riparazioni;
     }
@@ -108,6 +107,7 @@ public class TechRehab {
 
     public void rifiutaPreventivo(int codicePreventivo){
         clienteCorrente.rifiutaPreventivo(codicePreventivo);
+        clienteCorrente = null;
     }
 
     public List<Riparazione> ottieniRiparazioniInCorso(){

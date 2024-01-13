@@ -29,7 +29,9 @@ public class Fattura extends Subject {
     public LocalDate setDataEmissione(LocalDate dataEmissione) {
         return this.dataEmissione = dataEmissione;
     }
-
+    public float getCostoDefinitivo() {
+        return costDefinitivo;
+    }
     public Boolean getStato() {
         return stato;
     }

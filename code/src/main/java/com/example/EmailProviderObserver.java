@@ -25,5 +25,11 @@ public class EmailProviderObserver implements Observer {
         }
         
     }
+    public Boolean getObserverStateFattura() {
+        return observerStateFattura;
+    }
+    public String getObserverStateRiparazione() {
+        return observerStateRiparazione;
+    }
  
 }

@@ -42,6 +42,12 @@ public class Cliente {
     public String getCognome() {
         return cognome;
     }
+    public Dispositivo getDispositivoCorrente() {
+        return dispositivoCorrente;
+    }
+    public Dispositivo getDispositivoSelezionato() {
+        return dispositivoSelezionato;
+    }
     public void setCognome(String cognome) {
         this.cognome= cognome;
     }

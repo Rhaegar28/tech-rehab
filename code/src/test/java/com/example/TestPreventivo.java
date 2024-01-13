@@ -1,5 +1,4 @@
 package com.example;
-
 import static org.junit.Assert.*;
 import java.time.LocalDate;
 import org.junit.Before;
@@ -44,19 +43,6 @@ public class TestPreventivo {
     }
 
     @Test
-    public void testGetCostoPrevisto() {
-        assertEquals(0.0f, preventivo.getCostoPrevisto(), 0.0f);
-        preventivo.setOreLavoroPreviste(5.0f);
-        preventivo.setCostoPrevisto();
-        assertEquals(200.0f, preventivo.getCostoPrevisto(), 0.0f);
-
-        // Test con priorità
-        preventivo.setPriorita(true);
-        preventivo.setCostoPrevisto();
-        assertEquals(240.0f, preventivo.getCostoPrevisto(), 0.0f);
-    }
-
-    @Test
     public void testGetRiparazione() {
         assertNull(preventivo.getRiparazione());
 
@@ -77,11 +63,36 @@ public class TestPreventivo {
     @Test
     public void testNuovaRiparazione() {
         assertNull(preventivo.getRiparazione());
-
         Riparazione riparazione = preventivo.nuovaRiparazione("DescrizioneTest");
         assertNotNull(preventivo.getRiparazione());
         assertEquals(riparazione, preventivo.getRiparazione());
         assertEquals(preventivo, riparazione.getPreventivo());
+    }
+
+    @Test
+    public void testSetCostoPrevistoSenzaGaranzia() {
+        Dispositivo dispositivo = new Dispositivo("S7", "Samsung", "123456789", LocalDate.of(2020,01,01));
+        Preventivo preventivo = new Preventivo(dispositivo);
+        preventivo.setOreLavoroPreviste(5);
+        preventivo.setPriorita(true);
+        Ricambio ricambio1 = new Ricambio("1234","Display",40);
+        Ricambio ricambio2 = new Ricambio("12457","Batteria",20);
+        preventivo.aggiungiGuasto(ricambio1);
+        preventivo.aggiungiGuasto(ricambio2);
+        preventivo.setCostoPrevisto();
+        float costoPrevisto = 40.0f * 5.0f * (1.0f + 0.2f) + ricambio1.getPrezzo() + ricambio2.getPrezzo();
+        assertEquals(costoPrevisto, preventivo.getCostoPrevisto(), 0.01);
+    }
+    
+    @Test
+    public void testSetCostoPrevistoConGaranzia() {
+        Dispositivo dispositivo = new Dispositivo("S7", "Samsung", "123456789", LocalDate.of(2020,01,01));
+        Preventivo preventivo = new Preventivo(dispositivo);
+        preventivo.setDataEmissione(dispositivo.getFineGaranzia().minusDays(1));
+        Ricambio ricambio = new Ricambio("1234","Display",40);
+        preventivo.aggiungiGuasto(ricambio);
+        preventivo.setCostoPrevisto();
+        assertEquals(0.0f, preventivo.getCostoPrevisto(), 0.01);
     }
 
 }

@@ -14,5 +14,8 @@ public class SMSProviderObserver implements Observer {
         observerState = subject.getStato();
         System.out.println("SMS: Riparazione è nello stato " + observerState);
     }
+    public String getObserverState() {
+        return observerState;
+    }
  
 }
