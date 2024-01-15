@@ -9,7 +9,7 @@ public class Riparazione extends Subject {
     private static int count=0;
     private int codice;
     private String descrizione;
-    private String stato;
+    private StatoRiparazione stato;
     private float oreManodopera;
     private Preventivo preventivo;
     private LocalDate dataFineRiparazione;
@@ -27,13 +27,16 @@ public class Riparazione extends Subject {
     public void setDescrizione(String descrizione) {
         this.descrizione = descrizione;
     }
+   
     public String getStato() {
-        return stato;
+        return stato.stato();
     }
-    public void setStato(String stato) {
-        this.stato = stato;
+
+    public void setStato(StatoRiparazione sr) {
+        this.stato = sr;
         notifyObservers();
     }
+
     public float getOreManodopera() {
         return oreManodopera;
     }
@@ -58,7 +61,8 @@ public class Riparazione extends Subject {
     public Riparazione(String descrizioneRiparazione, Preventivo preventivo) {
         this.preventivo=preventivo;
         this.descrizione=descrizioneRiparazione;
-        this.stato="In carico";
+        //this.stato="In carico";
+        this.stato = new StatoRiparazioneInCarico(this);
         this.codice=++count;
     }
     
@@ -140,5 +144,15 @@ public class Riparazione extends Subject {
     public Fattura getFattura() {
         return fattura;
     }
-    
+
+    public void aggiornaStato(){
+        stato.aggiornaStato();
+        notifyObservers();
+    }  
+
+    public void sospendi(){
+        stato.sospendi();
+        notifyObservers();
+    }
+
 }

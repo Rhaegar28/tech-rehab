@@ -31,5 +31,5 @@ public class EmailProviderObserver implements Observer {
     public String getObserverStateRiparazione() {
         return observerStateRiparazione;
     }
- 
+
 }

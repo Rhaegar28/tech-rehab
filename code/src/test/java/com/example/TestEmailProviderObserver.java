@@ -24,8 +24,9 @@ public class TestEmailProviderObserver {
         Riparazione riparazione = new Riparazione("Dispositivo non si accende il display",preventivo);
         EmailProviderObserver emailObserver = new EmailProviderObserver(riparazione);
         riparazione.attach(emailObserver);
-        riparazione.setStato("In corso");
-        assertEquals("In corso", emailObserver.getObserverStateRiparazione());
+        //riparazione.inCarico();
+        riparazione.aggiornaStato();
+        assertEquals("In Carico", emailObserver.getObserverStateRiparazione());
         assertNull(emailObserver.getObserverStateFattura());
     }
 }

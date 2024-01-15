@@ -128,7 +128,7 @@ public class TechRehab {
 
     public Riparazione selezionaRiparazione(int codiceRiparazione) {
         Riparazione r = riparazioni.get(codiceRiparazione);
-        r.setStato("In lavorazione");
+        r.aggiornaStato();
         return r;
     }
 
@@ -139,13 +139,12 @@ public class TechRehab {
 
     public Riparazione terminaRiparazione(int codiceRiparazione) {
         Riparazione r = riparazioni.get(codiceRiparazione);
-        r.setStato("Completato");
-        r.setDataFineRiparazione(LocalDate.now());
+        r.aggiornaStato();
         return r;
     }
     public void sospendiRiparazione(int codiceRiparazione) {
         Riparazione r = riparazioni.get(codiceRiparazione);
-        r.setStato("In sospeso");
+        r.sospendi();
     }
 
     public void inserisciDispositivo(int IDCliente, String marca, String modello, String seriale, LocalDate fineGaranzia){
@@ -187,7 +186,7 @@ public class TechRehab {
     public void consegnaDispositivo(int codicePreventivo){
         for (Riparazione riparazione : riparazioni.values()) {
             if (riparazione.getStato() == "Completato" && riparazione.getPreventivo().getCodice() == codicePreventivo) {
-                riparazione.setStato("Consegnato");
+                riparazione.aggiornaStato();
                 riparazione.stampaRiparazione();
             }
         }
@@ -196,7 +195,7 @@ public class TechRehab {
     public void presaInCaricoRiparazione(int codicePreventivo){
         for (Riparazione riparazione : riparazioni.values()) {
             if (riparazione.getStato() == null && riparazione.getPreventivo().getCodice() == codicePreventivo) {
-                riparazione.setStato("In Carico");
+                riparazione.aggiornaStato();
             }
         }
     }    

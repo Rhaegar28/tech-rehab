@@ -29,10 +29,13 @@ public class TestRiparazione {
 
     @Test
     public void testGetSetStato() {
-        String stato = "In attesa";
-        riparazione.setStato(stato);
+        String stato = "Consegnato";
+        //riparazione.consegnato();
+        Preventivo p = new Preventivo(d);
+        riparazione.setPreventivo(p);
+        riparazione.setStato(new StatoRiparazioneCompletato(riparazione));
+        riparazione.aggiornaStato();
         assertEquals(stato, riparazione.getStato());
     }
-    
     
 }

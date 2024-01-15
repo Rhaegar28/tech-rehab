@@ -23,9 +23,9 @@ public class TestSMSProviderObserver{
     @Test
     public void testUpdate() {
         assertNull(smsObserver.getObserverState());
-        riparazione.setStato("In corso");
-        assertEquals("In corso", smsObserver.getObserverState());
-        riparazione.setStato("Completato");
+        riparazione.setStato(new StatoRiparazioneInCarico(riparazione));
+        assertEquals("In carico", smsObserver.getObserverState());
+        riparazione.aggiornaStato();
         assertEquals("Completato", smsObserver.getObserverState());
     }
 
