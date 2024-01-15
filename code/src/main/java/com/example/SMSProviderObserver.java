@@ -8,7 +8,13 @@ public class SMSProviderObserver implements Observer {
     public SMSProviderObserver(Riparazione subject) {
         this.subject = subject;
     }
+    public SMSProviderObserver(){
+    }
+    public void richiestaFeedback(String telefono, int codiceRiparazione){
+        System.out.println("SMS: Richiesta feedback per riparazione " + codiceRiparazione + " inviata a " + telefono);
 
+    }
+    
     @Override
     public void update() {
         observerState = subject.getStato();

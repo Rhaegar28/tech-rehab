@@ -9,6 +9,8 @@ public class EmailProviderObserver implements Observer {
     public EmailProviderObserver(Subject subject) {
         this.subject = subject;
     }
+    public EmailProviderObserver(){
+    }
 
     @Override
     public void update() {
@@ -30,6 +32,10 @@ public class EmailProviderObserver implements Observer {
     }
     public String getObserverStateRiparazione() {
         return observerStateRiparazione;
+    }
+    public void richiestaFeedback(String email, int codiceRiparazione){
+        System.out.println("email: Richiesta feedback per riparazione " + codiceRiparazione + " inviata a " + email);
+
     }
 
 }

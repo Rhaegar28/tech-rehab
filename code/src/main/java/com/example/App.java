@@ -22,6 +22,7 @@ public class App {
             System.out.println("4. Gestisci cliente");
             System.out.println("5. Emissione fattura");
             System.out.println("6. Consegna Dispositivo");
+            System.out.println("7. Gestisci feedback");
             System.out.println("0. Esci");
 
             System.out.print("Inserisci il numero corrispondente all'azione desiderata: ");
@@ -46,6 +47,9 @@ public class App {
                         break;
                     case 6:
                         consegnaDispositivo(techRehab, scanner);
+                        break;
+                    case 7:
+                        gestisciFeedback(techRehab,scanner);
                         break;
                     case 0:
                         System.out.println("Uscita dal programma.");
@@ -434,5 +438,15 @@ public class App {
         Riparazione r = techRehab.terminaRiparazione(codiceRiparazione);
         r.stampaRiparazione();
         System.out.println("Riparazione terminata con successo.");
+    }
+    private static void gestisciFeedback(TechRehab techRehab, Scanner scanner){
+        System.out.print("Inserisci l'ID del cliente: ");
+        int IDCliente = scanner.nextInt();
+        System.out.print("Inserisci il codice della riparazione: ");
+        int codiceRiparazione = scanner.nextInt();
+        techRehab.richiestaFeedback(IDCliente,codiceRiparazione);
+        System.out.print("Inserisci il livello di gradimento");
+        int feedback=scanner.nextInt();
+        techRehab.registraFeedback(feedback,codiceRiparazione);
     }
 }

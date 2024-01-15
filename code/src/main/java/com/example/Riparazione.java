@@ -14,7 +14,16 @@ public class Riparazione extends Subject {
     private Preventivo preventivo;
     private LocalDate dataFineRiparazione;
     private Fattura fattura;
+    private int feedback;
 
+
+    public int getFeedback() {
+        return feedback;
+    }
+    public void setFeedback(int feedback) {
+        this.feedback = feedback;
+    }
+    
     public int getCodice() {
         return codice;
     }
