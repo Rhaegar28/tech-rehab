@@ -78,7 +78,7 @@ public class Riparazione extends Subject {
     public void stampaRiparazione() {
         System.out.println("Codice: " + codice);
         System.out.println("Descrizione: " + descrizione);
-        System.out.println("Stato: " + stato);
+        System.out.println("Stato: " + stato.stato());
         System.out.println("Ore manodopera: " + oreManodopera);
     }
 
@@ -156,12 +156,10 @@ public class Riparazione extends Subject {
 
     public void aggiornaStato(){
         stato.aggiornaStato();
-        notifyObservers();
     }  
 
     public void sospendi(){
         stato.sospendi();
-        notifyObservers();
     }
 
 }

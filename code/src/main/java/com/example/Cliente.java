@@ -1,7 +1,9 @@
 package com.example;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -217,4 +219,13 @@ public class Cliente {
     public Dispositivo ricercaDispositivo(String seriale){
         return dispositivi.get(seriale);
     }
+
+    public List<Riparazione> ottieniRiparazioni() {
+        List<Riparazione> riparazioni = new ArrayList<>();
+        for (Dispositivo dispositivo : dispositivi.values()) {
+            riparazioni.addAll(dispositivo.ottieniRiparazioni());
+        }
+        return riparazioni;
+    }
 }
+

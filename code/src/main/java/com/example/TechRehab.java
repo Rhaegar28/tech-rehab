@@ -1,6 +1,7 @@
 package com.example;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -53,9 +54,9 @@ public class TechRehab {
     }
 
     public void loadRicambi() {
-        ricambi.put("DP124353dd", new Ricambio("DP124353dd", "Display", 300.0f));
-        ricambi.put("B2353", new Ricambio("B2353", "Batteria", 80.0f));
-        ricambi.put("FC887", new Ricambio("FC887", "Fotocamera", 306.35f));
+        ricambi.put("DP124353dd", new Ricambio("DP124353dd", "Display", 300.0f,1));
+        ricambi.put("B2353", new Ricambio("B2353", "Batteria", 80.0f,6));
+        ricambi.put("FC887", new Ricambio("FC887", "Fotocamera", 306.35f,9));
     }
 
     public void loadClienti() {
@@ -134,7 +135,7 @@ public class TechRehab {
                 .collect(Collectors.toList());
     }
 
-    public Riparazione selezionaRiparazione(int codiceRiparazione) {
+    public Riparazione selezionaAggiornaRiparazione(int codiceRiparazione) {
         Riparazione r = riparazioni.get(codiceRiparazione);
         r.aggiornaStato();
         return r;
@@ -148,7 +149,17 @@ public class TechRehab {
     public Riparazione terminaRiparazione(int codiceRiparazione) {
         Riparazione r = riparazioni.get(codiceRiparazione);
         r.aggiornaStato();
+        r.getPreventivo().getListaRicambi().forEach(ricambio -> ricambio.setQuantita(ricambio.getQuantita()-1));
         return r;
+    }
+    public boolean verificaQuantitaRicambi(int codiceRiparazione){
+        Riparazione r = riparazioni.get(codiceRiparazione);
+        for(Ricambio ricambio : r.getPreventivo().getListaRicambi()){
+            if(ricambio.getQuantita()==0){
+                return false; 
+            }
+        }
+        return true;
     }
 
     public void sospendiRiparazione(int codiceRiparazione) {
@@ -282,5 +293,35 @@ public class TechRehab {
         Riparazione r = riparazioni.get(codiceRiparazione);
         r.setFeedback(feedback);
         aggiornaFeedback(feedback);
+    }
+
+    public List<Riparazione> ricercaRiparazioniPerCliente(int idCliente) {
+        List<Riparazione> riparazioni = new ArrayList<>();
+
+        Cliente cliente = clienti.get(idCliente);
+        if (cliente != null) {
+            riparazioni.addAll(cliente.ottieniRiparazioni());
+        }
+
+        return riparazioni;
+    }
+
+    public int ricercaRiparazione(int idCliente) {
+        List<Riparazione> risultatoRicerca = ricercaRiparazioniPerCliente(idCliente);
+
+        if (risultatoRicerca.isEmpty()) {
+            System.out.println("Nessuna riparazione trovata per il cliente con ID " + idCliente);
+        } else {
+            System.out.println("Riparazioni per il cliente con ID " + idCliente + ":");
+            for (Riparazione riparazione : risultatoRicerca) {
+                System.out.println("Codice riparazione "+ riparazione.getCodice());
+            }
+        }
+        return risultatoRicerca.size();
+    }
+
+    public void selezionaRiparazione(int codiceRiparazione) {
+        Riparazione r = riparazioni.get(codiceRiparazione);
+        r.stampaRiparazione();
     }
 }

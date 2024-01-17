@@ -19,7 +19,7 @@ public class TestSMSProviderObserver{
         smsObserver = new SMSProviderObserver(riparazione);
         riparazione.attach(smsObserver);
     }
-
+    
     @Test
     public void testUpdate() {
         assertNull(smsObserver.getObserverState());

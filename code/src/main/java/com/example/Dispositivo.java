@@ -1,6 +1,8 @@
 package com.example;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Dispositivo {
@@ -99,5 +101,13 @@ public class Dispositivo {
 
     public void cancellaPreventivo(int codicePreventivo){
         preventivi.remove(codicePreventivo);
+    }
+
+    public List<Riparazione> ottieniRiparazioni() {
+        List<Riparazione> riparazioni = new ArrayList<>();
+        for (Preventivo preventivo : preventivi.values()) {
+            riparazioni.add(preventivo.getRiparazione());
+        }
+        return riparazioni;
     }
 }

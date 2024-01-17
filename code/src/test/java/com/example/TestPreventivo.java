@@ -53,7 +53,7 @@ public class TestPreventivo {
 
     @Test
     public void testAggiungiGuasto() {
-        Ricambio ricambio = new Ricambio("123", "TestRicambio", 50.0f);
+        Ricambio ricambio = new Ricambio("123", "TestRicambio", 50.0f,1);
         preventivo.aggiungiGuasto(ricambio);
 
         assertEquals(1, preventivo.getListaRicambi().size());
@@ -75,8 +75,8 @@ public class TestPreventivo {
         Preventivo preventivo = new Preventivo(dispositivo);
         preventivo.setOreLavoroPreviste(5);
         preventivo.setPriorita(true);
-        Ricambio ricambio1 = new Ricambio("1234","Display",40);
-        Ricambio ricambio2 = new Ricambio("12457","Batteria",20);
+        Ricambio ricambio1 = new Ricambio("1234","Display",40,1);
+        Ricambio ricambio2 = new Ricambio("12457","Batteria",20,1);
         preventivo.aggiungiGuasto(ricambio1);
         preventivo.aggiungiGuasto(ricambio2);
         preventivo.setCostoPrevisto();
@@ -89,7 +89,7 @@ public class TestPreventivo {
         Dispositivo dispositivo = new Dispositivo("S7", "Samsung", "123456789", LocalDate.of(2020,01,01));
         Preventivo preventivo = new Preventivo(dispositivo);
         preventivo.setDataEmissione(dispositivo.getFineGaranzia().minusDays(1));
-        Ricambio ricambio = new Ricambio("1234","Display",40);
+        Ricambio ricambio = new Ricambio("1234","Display",40,1);
         preventivo.aggiungiGuasto(ricambio);
         preventivo.setCostoPrevisto();
         assertEquals(0.0f, preventivo.getCostoPrevisto(), 0.01);

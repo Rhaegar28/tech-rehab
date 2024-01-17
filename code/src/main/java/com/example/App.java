@@ -23,6 +23,7 @@ public class App {
             System.out.println("5. Emissione fattura");
             System.out.println("6. Consegna Dispositivo");
             System.out.println("7. Gestisci feedback");
+            System.out.println("8. Ricerca riparazione");
             System.out.println("0. Esci");
 
             System.out.print("Inserisci il numero corrispondente all'azione desiderata: ");
@@ -49,7 +50,10 @@ public class App {
                         consegnaDispositivo(techRehab, scanner);
                         break;
                     case 7:
-                        gestisciFeedback(techRehab,scanner);
+                        gestisciFeedback(techRehab, scanner);
+                        break;
+                    case 8:
+                        ricercaRiparazione(techRehab, scanner);
                         break;
                     case 0:
                         System.out.println("Uscita dal programma.");
@@ -383,13 +387,19 @@ public class App {
         int codiceRiparazione;
         String risposta;
         visualizzaRiparazioniInCorso(techRehab);
-        codiceRiparazione = selezionaRiparazione(techRehab, scanner);
+        codiceRiparazione = selezionaAggiornaRiparazione(techRehab, scanner);
         System.out.println("I danni riscontrati sono fedeli alla descrizione? [S/N]");
         while (true) {
             risposta = scanner.next();
             if (risposta.equalsIgnoreCase("S")) {
-                definisciOreManodopera(techRehab, codiceRiparazione, scanner);
-                terminaRiparazione(techRehab, codiceRiparazione);
+                if (techRehab.verificaQuantitaRicambi(codiceRiparazione)) {
+                    System.out.println("Quantità ricambi aggiornata con successo.");
+                    definisciOreManodopera(techRehab, codiceRiparazione, scanner);
+                    terminaRiparazione(techRehab, codiceRiparazione);
+                } else {
+                    System.out.println("Quantità ricambi non sufficiente, riparazione sospesa");
+                    techRehab.sospendiRiparazione(codiceRiparazione);
+                }
                 break;
             } else if (risposta.equalsIgnoreCase("N")) {
                 scanner.nextLine(); // Pulisce il buffer di input
@@ -419,10 +429,10 @@ public class App {
         }
     }
 
-    private static int selezionaRiparazione(TechRehab techRehab, Scanner scanner) {
+    private static int selezionaAggiornaRiparazione(TechRehab techRehab, Scanner scanner) {
         System.out.print("Inserisci il codice della riparazione da selezionare: ");
         int codiceRiparazione = scanner.nextInt();
-        Riparazione riparazioneSelezionata = techRehab.selezionaRiparazione(codiceRiparazione);
+        Riparazione riparazioneSelezionata = techRehab.selezionaAggiornaRiparazione(codiceRiparazione);
         System.out.println("Riparazione selezionata con successo.");
         return riparazioneSelezionata.getCodice();
     }
@@ -439,14 +449,29 @@ public class App {
         r.stampaRiparazione();
         System.out.println("Riparazione terminata con successo.");
     }
-    private static void gestisciFeedback(TechRehab techRehab, Scanner scanner){
+
+    private static void gestisciFeedback(TechRehab techRehab, Scanner scanner) {
         System.out.print("Inserisci l'ID del cliente: ");
         int IDCliente = scanner.nextInt();
         System.out.print("Inserisci il codice della riparazione: ");
         int codiceRiparazione = scanner.nextInt();
-        techRehab.richiestaFeedback(IDCliente,codiceRiparazione);
+        techRehab.richiestaFeedback(IDCliente, codiceRiparazione);
         System.out.print("Inserisci il livello di gradimento");
-        int feedback=scanner.nextInt();
-        techRehab.registraFeedback(feedback,codiceRiparazione);
+        int feedback = scanner.nextInt();
+        techRehab.registraFeedback(feedback, codiceRiparazione);
+    }
+
+    private static void ricercaRiparazione(TechRehab techRehab, Scanner scanner) {
+        System.out.print("Inserisci l'ID del cliente: ");
+        int IDCliente = scanner.nextInt();
+        if (techRehab.ricercaRiparazione(IDCliente) != 0) {
+            selezionaRiparazione(techRehab, scanner);
+        }
+    }
+
+    private static void selezionaRiparazione(TechRehab techRehab, Scanner scanner) {
+        System.out.print("Inserisci il codice della riparazione: ");
+        int codiceRiparazione = scanner.nextInt();
+        techRehab.selezionaRiparazione(codiceRiparazione);
     }
 }

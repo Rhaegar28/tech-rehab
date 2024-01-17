@@ -4,6 +4,7 @@ public class Ricambio {
     private String seriale;
     private String nome;
     private float prezzo;
+    private int quantita;
 
     public String getSeriale() {
         return seriale;
@@ -23,10 +24,16 @@ public class Ricambio {
     public void setPrezzo(float prezzo) {
         this.prezzo = prezzo;
     }
-
-    public Ricambio(String seriale, String nome, float prezzo) {
+    public int getQuantita() {
+        return quantita;
+    }
+    public void setQuantita(int quantita) {
+        this.quantita = quantita;
+    }
+    public Ricambio(String seriale, String nome, float prezzo,int quantita) {
         this.seriale = seriale;
         this.nome = nome;
         this.prezzo = prezzo;
+        this.quantita=quantita;
     }
 }
