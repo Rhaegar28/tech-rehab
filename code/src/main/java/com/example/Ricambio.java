@@ -36,4 +36,9 @@ public class Ricambio {
         this.prezzo = prezzo;
         this.quantita=quantita;
     }
+
+    public void updateRicambio(float prezzo, int quantita){
+        setPrezzo(prezzo);
+        setQuantita(quantita);
+    }
 }

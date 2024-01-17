@@ -24,6 +24,7 @@ public class App {
             System.out.println("6. Consegna Dispositivo");
             System.out.println("7. Gestisci feedback");
             System.out.println("8. Ricerca riparazione");
+            System.out.println("9. Gestisci ricambio");
             System.out.println("0. Esci");
 
             System.out.print("Inserisci il numero corrispondente all'azione desiderata: ");
@@ -54,6 +55,9 @@ public class App {
                         break;
                     case 8:
                         ricercaRiparazione(techRehab, scanner);
+                        break;
+                    case 9:
+                        gestisciRicambio(techRehab, scanner);
                         break;
                     case 0:
                         System.out.println("Uscita dal programma.");
@@ -473,5 +477,88 @@ public class App {
         System.out.print("Inserisci il codice della riparazione: ");
         int codiceRiparazione = scanner.nextInt();
         techRehab.selezionaRiparazione(codiceRiparazione);
+    }
+
+    private static void gestisciRicambio(TechRehab techRehab, Scanner scanner) {
+        int scelta;
+        do {
+            System.out.println("Menu:");
+            System.out.println("1. Inserisci ricambio");
+            System.out.println("2. Ricerca ricambio");
+            System.out.println("3. Modifica ricambio");
+            System.out.println("4. Rimuovi ricambio");
+            System.out.println("0. Esci");
+
+            System.out.print("Inserisci il numero corrispondente all'azione desiderata: ");
+            scelta = scanner.nextInt();
+
+            switch (scelta) {
+                case 1:
+                    inserisciRicambio(techRehab, scanner);
+                    break;
+                case 2:
+                    ricercaRicambio(techRehab, scanner);
+                    break;
+                case 3:
+                    modificaRicambio(techRehab, scanner);
+                    break;
+                case 4:
+                    try {
+                        techRehab.rimuoviRicambio(scanner);
+                    } catch (Exception e) {
+                        System.err.println(e.getMessage());
+                    }
+                    break;
+                case 0:
+                    System.out.println("Uscita dal menu gestione ricambio.");
+                    break;
+                default:
+                    System.out.println("Scelta non valida. Riprova.");
+            }
+
+        } while (scelta != 0);
+    }
+
+    private static void inserisciRicambio(TechRehab techRehab, Scanner scanner) {
+        System.out.print("Inserisci il seriale del ricambio: ");
+        String seriale = scanner.next();
+        scanner.nextLine(); // Pulisce il buffer di input
+        System.out.print("Inserisci il nome del ricambio: ");
+        String nome = scanner.nextLine();
+        System.out.print("Inserisci il prezzo del ricambio: ");
+        float prezzo = scanner.nextFloat();
+        System.out.print("Inserisci la quantità del ricambio: ");
+        int quantita = scanner.nextInt();
+
+        techRehab.inserisciRicambio(seriale, nome, prezzo, quantita);
+        techRehab.confermaInserimentoRicambio();
+        System.out.println("Ricambio inserito con successo.");
+    }
+
+    private static void ricercaRicambio(TechRehab techRehab, Scanner scanner) {
+        System.out.print("Inserisci il seriale del ricambio da cercare: ");
+        String seriale = scanner.next();
+        Ricambio ricambioCercato = techRehab.ricercaRicambio(seriale);
+        if (ricambioCercato != null) {
+            System.out.println("Ricambio trovato: " + ricambioCercato.getSeriale() + " " + ricambioCercato.getNome() + ", " + ricambioCercato.getPrezzo() + " euro" + ", quantità: " + ricambioCercato.getQuantita());
+        } else {
+            System.out.println("Ricambio non trovato");
+        }
+    }
+
+    private static void modificaRicambio(TechRehab techRehab, Scanner scanner) {
+        System.out.print("Inserisci il seriale del ricambio da modificare: ");
+        String seriale = scanner.next();
+        if (techRehab.ricercaRicambio(seriale) == null) {
+            System.out.println("Errore: seriale del ricambio non valido. Modifica non effettuata.");
+            return;
+        }
+        System.out.print("Inserisci il nuovo prezzo del ricambio: ");
+        float prezzo = scanner.nextFloat();
+        System.out.print("Inserisci la nuova quantità del ricambio: ");
+        int quantita = scanner.nextInt();
+
+        techRehab.modificaRicambio(seriale, prezzo, quantita);
+        System.out.println("Ricambio modificato con successo.");
     }
 }

@@ -20,6 +20,7 @@ public class TechRehab {
     private Cliente clienteCorrente;
     private float mediaFeedback;
     private int numeroFeedback;
+    private Ricambio ricambioCorrente;
 
     private TechRehab() {
         this.riparazioni = new HashMap<>();
@@ -323,5 +324,56 @@ public class TechRehab {
     public void selezionaRiparazione(int codiceRiparazione) {
         Riparazione r = riparazioni.get(codiceRiparazione);
         r.stampaRiparazione();
+    }
+
+    public Ricambio inserisciRicambio(String seriale, String nome, float prezzo, int quantita) {
+        ricambioCorrente = new Ricambio(seriale, nome, prezzo, quantita);
+        return ricambioCorrente;
+    }
+
+    public void modificaRicambio(String seriale, float prezzo, int quantita) {
+        ricambioCorrente = ricambi.get(seriale);
+        ricambioCorrente.updateRicambio(prezzo, quantita);
+        ricambioCorrente = null;
+    }
+
+    public void confermaInserimentoRicambio() {
+        ricambi.put(ricambioCorrente.getSeriale(), ricambioCorrente);
+        ricambioCorrente = null;
+    }
+
+    public void rimuoviRicambio(Scanner scanner) throws Exception {
+        if (ricambi.isEmpty()) {
+            System.out.println("Nessun ricambio registrato.");
+            return;
+        }
+
+        System.out.println("Lista dei ricambi registrati:");
+        for (Ricambio ricambio : ricambi.values()) {
+            System.out.println(ricambio.getSeriale() + ": " + ricambio.getNome() + ", " + ricambio.getPrezzo() + " euro, quantità: " + ricambio.getQuantita());
+        }
+
+        System.out.print("Inserisci il seriale del ricambio da rimuovere: ");
+        String serialeDaRimuovere = scanner.next();
+
+        if (!ricambi.containsKey(serialeDaRimuovere)) {
+            throw new Exception("Ricambio non trovato con seriale: " + serialeDaRimuovere);
+        }
+
+        Ricambio ricambioRimosso = ricambi.get(serialeDaRimuovere);
+
+        System.out.println("Sei sicuro di voler rimuovere il ricambio " + ricambioRimosso.getSeriale() + " " + ricambioRimosso.getNome() + "? [S/N]");
+
+        String response = scanner.next();
+        if ("S".equalsIgnoreCase(response)) {
+            ricambi.remove(serialeDaRimuovere);
+            System.out.println("Ricambio rimosso con successo.");
+        } else {
+            System.out.println("Rimozione annullata.");
+        }
+    }
+
+    public Ricambio ricercaRicambio(String seriale) {
+        return ricambi.get(seriale);
     }
 }
