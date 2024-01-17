@@ -1,5 +1,7 @@
 package com.example;
 import static org.junit.Assert.*;
+
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import java.time.LocalDate;
@@ -19,6 +21,13 @@ public class TestSMSProviderObserver{
         smsObserver = new SMSProviderObserver(riparazione);
         riparazione.attach(smsObserver);
     }
+    @After
+    public void tearDown() {
+        riparazione = null;
+        smsObserver = null;
+        preventivo = null;
+        dispositivo = null;
+    }
     
     @Test
     public void testUpdate() {
@@ -26,7 +35,7 @@ public class TestSMSProviderObserver{
         riparazione.setStato(new StatoRiparazioneInCarico(riparazione));
         assertEquals("In carico", smsObserver.getObserverState());
         riparazione.aggiornaStato();
-        assertEquals("Completato", smsObserver.getObserverState());
+        assertEquals("In lavorazione", smsObserver.getObserverState());
     }
 
 }

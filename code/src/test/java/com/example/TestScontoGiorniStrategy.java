@@ -1,5 +1,7 @@
 package com.example;
 import static org.junit.Assert.*;
+
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -9,6 +11,10 @@ public class TestScontoGiorniStrategy {
     @Before
     public void setUp() {
         scontoGiorniStrategy = new ScontoGiorniStrategy();
+    }
+    @After
+    public void tearDown() {
+        scontoGiorniStrategy = null;
     }
     @Test
     public void testCalcolaCostoH() {

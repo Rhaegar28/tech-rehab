@@ -30,7 +30,7 @@ public class Ricambio {
     public void setQuantita(int quantita) {
         this.quantita = quantita;
     }
-    public Ricambio(String seriale, String nome, float prezzo,int quantita) {
+    public Ricambio(String seriale, String nome, float prezzo, int quantita) {
         this.seriale = seriale;
         this.nome = nome;
         this.prezzo = prezzo;

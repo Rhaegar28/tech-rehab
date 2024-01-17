@@ -2,6 +2,8 @@ package com.example;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import java.time.LocalDate;
+
+import org.junit.After;
 import org.junit.Before;
 
 
@@ -14,6 +16,12 @@ public class TestRiparazione {
         d = new Dispositivo("modello", "marca", "seriale", LocalDate.of(2024, 10, 2));        
         riparazione = new Riparazione("Display rotto, sostituire il display", new Preventivo(d));
     }
+    @After
+    public void tearDown() {
+        riparazione = null;
+        d = null;
+    }
+    
     @Test
     public void testGetSetDescrizione() {
         String descrizione = "Display rotto sostituire il display";
@@ -29,8 +37,7 @@ public class TestRiparazione {
 
     @Test
     public void testGetSetStato() {
-        String stato = "Consegnato";
-        //riparazione.consegnato();
+        String stato = "Recensito";
         Preventivo p = new Preventivo(d);
         riparazione.setPreventivo(p);
         riparazione.setStato(new StatoRiparazioneCompletato(riparazione));

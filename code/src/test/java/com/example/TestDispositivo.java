@@ -2,6 +2,8 @@ package com.example;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import java.time.LocalDate;
+
+import org.junit.After;
 import org.junit.Before;
 
 public class TestDispositivo {
@@ -9,6 +11,10 @@ public class TestDispositivo {
     @Before
     public void setUp() {
         dispositivo = new Dispositivo("Samsung","S21","5265",LocalDate.parse("2021-12-12"));
+    }
+    @After
+    public void tearDown() {
+        dispositivo = null;
     }
     @Test
     public void testSetModello() {

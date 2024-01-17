@@ -1,5 +1,6 @@
 package com.example;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -11,6 +12,10 @@ public class TestCliente {
     @Before
     public void setUp() {
         cliente = new Cliente("Angelo", "Frasca", "3331573244", "angelofrasca@gmail.com");
+    }
+    @After
+    public void tearDown() {
+        cliente = null;
     }
     @Test
     public void testGetSetID() {

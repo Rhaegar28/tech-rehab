@@ -1,5 +1,7 @@
 package com.example;
 import static org.junit.Assert.*;
+
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import java.time.LocalDate;
@@ -11,6 +13,10 @@ public class TestFattura {
     @Before
     public void setUp() {
         fattura = new Fattura();
+    }
+    @After
+    public void tearDown() {
+        fattura = null;
     }
 
     @Test

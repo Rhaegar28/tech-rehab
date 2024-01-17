@@ -53,6 +53,14 @@ public class TechRehab {
     public Map<Integer, Fattura> getFatture() {
         return fatture;
     }
+    
+    public Map<String, Ricambio> getRicambi() {
+        return ricambi;
+    }
+
+    public void setRicambi(Map<String, Ricambio> ricambi) {
+        this.ricambi = ricambi;
+    }
 
     public void loadRicambi() {
         ricambi.put("DP124353dd", new Ricambio("DP124353dd", "Display", 300.0f,1));
@@ -80,6 +88,9 @@ public class TechRehab {
     }
 
     public void aggiungiGuasto(String serialeRicambio) {
+        if (clienteCorrente == null) {
+            throw new IllegalStateException("Nessun cliente corrente. Devi prima creare un preventivo.");
+        }
         Ricambio ricambioSelezionato = ricambi.get(serialeRicambio);
         clienteCorrente.aggiungiGuasto(ricambioSelezionato);
     }

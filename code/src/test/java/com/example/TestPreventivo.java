@@ -1,6 +1,8 @@
 package com.example;
 import static org.junit.Assert.*;
 import java.time.LocalDate;
+
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -10,9 +12,12 @@ public class TestPreventivo {
 
     @Before
     public void setUp() {
-        Dispositivo d = new Dispositivo("modello", "marca", "seriale"
-        , LocalDate.of(2024, 10, 2));
+        Dispositivo d = new Dispositivo("modello", "marca", "seriale", LocalDate.of(2024, 10, 2));
         preventivo = new Preventivo(d);
+    }
+    @After
+    public void tearDown() {
+        preventivo = null;
     }
 
     @Test

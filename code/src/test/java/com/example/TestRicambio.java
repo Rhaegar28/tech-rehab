@@ -3,7 +3,12 @@ package com.example;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
+import org.junit.After;
+import org.junit.Before;
+
 public class TestRicambio {
+
+    private Ricambio ricambio;
 
     @Test
     public void testGetCodice() {
@@ -42,5 +47,13 @@ public class TestRicambio {
     Ricambio ricambio = new Ricambio("12345", "USB-C", 8.99f,1);
     ricambio.setPrezzo(8.99f);
     assertEquals(8.99, ricambio.getPrezzo(), 0.01);
+    }
+
+    @Test
+    public void testUpdate() {
+        Ricambio ricambio = new Ricambio("12345", "USB-C", 8.99f,6);
+        ricambio.updateRicambio(12.99f, 15);
+        assertEquals(12.99f, ricambio.getPrezzo(), 0.01);
+        assertEquals(15, ricambio.getQuantita());
     }
 }

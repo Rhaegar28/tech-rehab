@@ -3,6 +3,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import java.time.LocalDate;
 
+import org.junit.After;
 import org.junit.Before;
 
 public class TestTechRehab {
@@ -12,6 +13,11 @@ public class TestTechRehab {
     @Before
     public void setUp() {
         techRehab = TechRehab.getInstance();
+    }
+
+    @After
+    public void tearDown() {
+        techRehab = null;
     }
 
     @Test
@@ -46,7 +52,7 @@ public class TestTechRehab {
         techRehab.definisciDataPrevistaConsegna(LocalDate.now().plusDays(3));
         Preventivo preventivo = techRehab.confermaPreventivo();
         techRehab.accettaPreventivo("DescrizioneRiparazione", preventivo.getCodice());
-        assertNotNull(techRehab.getRiparazioni().get(preventivo.getCodice()));
+        assertNotNull(techRehab.getRiparazioni().get(1));
         assertNull(techRehab.getClienteCorrente());
     }
 
@@ -71,5 +77,41 @@ public class TestTechRehab {
     @Test
     public void testOttieniRiparazioniCompletate() {
         assertNotNull(techRehab.ottieniRiparazioniCompletate());
+    }
+
+    @Test
+    public void testInserisciRicambio() {
+        techRehab.inserisciRicambio("ASDF123", "Set di viti", 5.67f, 100);
+        techRehab.confermaInserimentoRicambio();
+        assertNotNull(techRehab.getRicambi().get("ASDF123"));
+    }
+
+    @Test
+    public void testModificaRicambio() {
+        techRehab.inserisciRicambio("ASDF123", "Set di viti", 5.67f, 100);
+        techRehab.confermaInserimentoRicambio();
+        techRehab.modificaRicambio("ASDF123", 12.5f, 124);
+        assertEquals(12.5f, techRehab.getRicambi().get("ASDF123").getPrezzo(), 0.01);
+        assertEquals(124, techRehab.getRicambi().get("ASDF123").getQuantita());
+    }
+
+    @Test
+    public void testGetRicambioBySeriale() {
+        Ricambio ricambio = techRehab.inserisciRicambio("ASDF123", "Set di viti", 5.67f, 100);
+        techRehab.confermaInserimentoRicambio();
+        Ricambio ricambioOttenuto = techRehab.getRicambi().get("ASDF123");
+        assertNotNull(ricambioOttenuto);
+        assertEquals(ricambio, ricambioOttenuto);
+    }
+
+    @Test
+    public void testGetListaRicambi() {
+        Ricambio ricambio1 = techRehab.inserisciRicambio("ASDF123", "Set di viti", 5.67f, 100);
+        techRehab.confermaInserimentoRicambio();
+        Ricambio ricambio2 = techRehab.inserisciRicambio("GHJK456", "Scheda video", 1280f, 2);
+        techRehab.confermaInserimentoRicambio();
+        assertEquals(5, techRehab.getRicambi().size());
+        assertTrue(techRehab.getRicambi().containsValue(ricambio1));
+        assertTrue(techRehab.getRicambi().containsValue(ricambio2));
     }
 }

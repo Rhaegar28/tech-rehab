@@ -1,5 +1,7 @@
 package com.example;
 import static org.junit.Assert.*;
+
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -10,6 +12,10 @@ public class TestClienteVIPStrategy{
     @Before
     public void setUp() {
         clienteVIPStrategy = new ClienteVIPStrategy();
+    }
+    @After
+    public void tearDown() {
+        clienteVIPStrategy = null;
     }
     @Test
     public void testCalcolaCostoH() {

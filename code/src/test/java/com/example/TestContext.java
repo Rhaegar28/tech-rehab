@@ -1,5 +1,7 @@
 package com.example;
 import static org.junit.Assert.*;
+
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -9,6 +11,11 @@ public class TestContext {
     @Before
     public void setUp() {
         context = new Context();
+    }
+
+    @After
+    public void tearDown() {
+        context = null;
     }
 
     @Test
