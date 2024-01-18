@@ -3,12 +3,7 @@ package com.example;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-import org.junit.After;
-import org.junit.Before;
-
 public class TestRicambio {
-
-    private Ricambio ricambio;
 
     @Test
     public void testGetCodice() {

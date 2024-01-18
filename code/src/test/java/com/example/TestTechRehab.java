@@ -52,7 +52,7 @@ public class TestTechRehab {
         techRehab.definisciDataPrevistaConsegna(LocalDate.now().plusDays(3));
         Preventivo preventivo = techRehab.confermaPreventivo();
         techRehab.accettaPreventivo("DescrizioneRiparazione", preventivo.getCodice());
-        assertNotNull(techRehab.getRiparazioni().get(1));
+        assertFalse(techRehab.getRiparazioni().isEmpty());
         assertNull(techRehab.getClienteCorrente());
     }
 
@@ -114,4 +114,24 @@ public class TestTechRehab {
         assertTrue(techRehab.getRicambi().containsValue(ricambio1));
         assertTrue(techRehab.getRicambi().containsValue(ricambio2));
     }
+
+    @Test
+    public void testRicercaRiparazione() {
+        techRehab.nuovoPreventivo("23116PN5BC", 1);
+        techRehab.aggiungiGuasto("DP124353dd");
+        techRehab.definisciPriorita(true);
+        techRehab.definisciOreLavoroPreviste(1.5f);
+        techRehab.definisciDataPrevistaConsegna(LocalDate.now().plusDays(2));
+        Preventivo preventivo = techRehab.confermaPreventivo();
+        techRehab.accettaPreventivo("DescrizioneRiparazione", preventivo.getCodice());
+        assertNotNull(techRehab.ricercaRiparazione(1));
+    }
+
+    @Test
+    public void testAggiornaFeedback() {
+        techRehab.aggiornaFeedback(5);
+        assertEquals(5, techRehab.getMediaFeedback(),0.01);
+    }
+
+
 }

@@ -46,6 +46,10 @@ public class TechRehab {
         return clienteCorrente;
     }
 
+    public float getMediaFeedback() {
+        return mediaFeedback;
+    }
+
     public Map<Integer, Riparazione> getRiparazioni() {
         return riparazioni;
     }
@@ -58,6 +62,10 @@ public class TechRehab {
         return ricambi;
     }
 
+    public Map<Integer, Cliente> getClienti() {
+        return clienti;
+    }    
+
     public void setRicambi(Map<String, Ricambio> ricambi) {
         this.ricambi = ricambi;
     }
@@ -69,8 +77,8 @@ public class TechRehab {
     }
 
     public void loadClienti() {
-        clienti.put(1, new Cliente("Mario", "Rossi", "3331234567", "mario.rossi@gmail.com"));
-        clienti.put(2, new Cliente("Luigi", "Verdi", "3337654321", "luigi.verdi@gmail.com"));
+        clienti.put(1, new Cliente("Daniele", "Russo", "3331234567", "daniele.russo@gmail.com"));
+        clienti.put(2, new Cliente("Nunzio", "Fornitto", "3337654321", "nunzio.fornitto@gmail.com"));
         clienti.put(3, new Cliente("Angelo", "Frasca", "3331573244", "angelo.frasca@libero.it"));
     }
 
@@ -294,13 +302,13 @@ public class TechRehab {
         clienteCorrente = null;
     }
 
-    private void aggiornaFeedback(int feedback) {
+    public void aggiornaFeedback(int feedback) {
         mediaFeedback = mediaFeedback * numeroFeedback;
         numeroFeedback++;
         mediaFeedback = mediaFeedback + feedback;
         mediaFeedback = mediaFeedback / numeroFeedback;
     }
-
+ 
     public void registraFeedback(int feedback, int codiceRiparazione) {
         Riparazione r = riparazioni.get(codiceRiparazione);
         r.setFeedback(feedback);

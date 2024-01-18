@@ -16,7 +16,7 @@ public class StatoRiparazioneCompletato extends StatoRiparazione {
 
     @Override
     public String stato() {
-        return "In completato";
+        return "Completato";
     }
 
 }

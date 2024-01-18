@@ -1,6 +1,5 @@
 package com.example;
 
-import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.InputMismatchException;
@@ -16,48 +15,21 @@ public class App {
         int scelta;
         do {
             System.out.println("Menu:");
-            System.out.println("1. Gestisci dispositivo");
-            System.out.println("2. Emissione preventivo");
-            System.out.println("3. Riparazione dispositivo");
-            System.out.println("4. Gestisci cliente");
-            System.out.println("5. Emissione fattura");
-            System.out.println("6. Consegna Dispositivo");
-            System.out.println("7. Gestisci feedback");
-            System.out.println("8. Ricerca riparazione");
-            System.out.println("9. Gestisci ricambio");
+            System.out.println("1. Amministratore");  
+            System.out.println("2. Tecnico");
             System.out.println("0. Esci");
 
             System.out.print("Inserisci il numero corrispondente all'azione desiderata: ");
+
             try {
                 scelta = scanner.nextInt();
 
                 switch (scelta) {
                     case 1:
-                        gestisciDispositivo(techRehab, scanner);
+                        gestisciAmministratore(techRehab, scanner);
                         break;
                     case 2:
-                        emettiPreventivo(techRehab, scanner);
-                        break;
-                    case 3:
-                        riparaDispositivo(techRehab, scanner);
-                        break;
-                    case 4:
-                        gestisciCliente(techRehab, scanner);
-                        break;
-                    case 5:
-                        emettiFattura(techRehab, scanner);
-                        break;
-                    case 6:
-                        consegnaDispositivo(techRehab, scanner);
-                        break;
-                    case 7:
-                        gestisciFeedback(techRehab, scanner);
-                        break;
-                    case 8:
-                        ricercaRiparazione(techRehab, scanner);
-                        break;
-                    case 9:
-                        gestisciRicambio(techRehab, scanner);
+                        gestisciTecnico(techRehab, scanner);
                         break;
                     case 0:
                         System.out.println("Uscita dal programma.");
@@ -68,9 +40,6 @@ public class App {
             } catch (InputMismatchException e) {
                 System.out.println("Input non valido. Inserisci un numero intero.");
                 scanner.next(); // Pulisce il buffer di input
-                scelta = -1;
-            } catch (DateTimeException e) {
-                System.out.println("Errore nella gestione della data: " + e.getMessage());
                 scelta = -1;
             } catch (Exception e) {
                 System.out.println("Si è verificato un errore durante l'esecuzione: " + e.getMessage());
@@ -123,6 +92,103 @@ public class App {
             }
 
         } while (scelta != 0);
+    }
+
+    private static void gestisciAmministratore(TechRehab techRehab, Scanner scanner){
+        int scelta;
+        do {
+            System.out.println("Menu:");
+            System.out.println("1. Gestisci cliente");
+            System.out.println("2. Gestisci dispositivo");
+            System.out.println("3. Gestisci ricambio");
+            System.out.println("4. Emissione preventivo");
+            System.out.println("5. Emissione fattura");
+            System.out.println("6. Consegna Dispositivo");
+            System.out.println("7. Gestisci feedback");
+            System.out.println("8. Ricerca riparazione");
+            
+            System.out.println("0. Esci");
+
+            System.out.print("Inserisci il numero corrispondente all'azione desiderata: ");
+            try {
+                scelta = scanner.nextInt();
+
+                switch (scelta) {
+                    case 1:
+                        gestisciCliente(techRehab, scanner);
+                        break;
+                    case 2:
+                        gestisciDispositivo(techRehab, scanner);
+                        break;
+                    case 3:
+                        gestisciRicambio(techRehab, scanner);
+                        break;                        
+                    case 4:
+                        emettiPreventivo(techRehab, scanner);
+                        break;
+                    case 5:
+                        emettiFattura(techRehab, scanner);
+                        break;
+                    case 6:
+                        consegnaDispositivo(techRehab, scanner);
+                        break;
+                    case 7:
+                        gestisciFeedback(techRehab, scanner);
+                        break;
+                    case 8:
+                        ricercaRiparazione(techRehab, scanner);
+                        break;
+                    case 0:
+                        System.out.println("Uscita dal programma.");
+                        break;
+                    default:
+                        System.out.println("Scelta non valida. Riprova.");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Input non valido. Inserisci un numero intero.");
+                scanner.next(); // Pulisce il buffer di input
+                scelta = -1;
+            } catch (Exception e) {
+                System.out.println("Si è verificato un errore durante l'esecuzione: " + e.getMessage());
+                scelta = -1;
+            }
+
+        } while (scelta != 0);
+
+    }
+
+    private static void gestisciTecnico(TechRehab techRehab, Scanner scanner){
+        int scelta;
+        do {
+            System.out.println("Menu:");
+            System.out.println("1. Riparazione dispositivo");
+            System.out.println("0. Esci");
+
+            System.out.print("Inserisci il numero corrispondente all'azione desiderata: ");
+            try {
+                scelta = scanner.nextInt();
+
+                switch (scelta) {
+                    case 1:
+                        riparaDispositivo(techRehab, scanner);
+                        break;
+                    case 0:
+                        System.out.println("Uscita dal programma.");
+                        break;
+                    default:
+                        System.out.println("Scelta non valida. Riprova.");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Input non valido. Inserisci un numero intero.");
+                scanner.next(); // Pulisce il buffer di input
+                scelta = -1;
+            } catch (Exception e) {
+                System.out.println("Si è verificato un errore durante l'esecuzione: " + e.getMessage());
+                scelta = -1;
+            }
+
+        } while (scelta != 0);
+
     }
 
     private static void inserisciDispositivo(int IDCliente, TechRehab techRehab, Scanner scanner) {
