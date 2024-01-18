@@ -22,7 +22,7 @@ public class TestTechRehab {
 
     @Test
     public void testNuovoPreventivo() {
-        techRehab.nuovoPreventivo("Seriale1", 1);
+        techRehab.nuovoPreventivo("23116PN5BC", 1);
         assertNotNull(techRehab.getClienteCorrente());
     }
     @Test
